@@ -10,3 +10,12 @@
     transform: translate(-3px, -3px);
     box-shadow: 6px 6px 0 0 #60a5fa; 
  }
+ .greenShadow {
+    transition: all 0.3s ease;
+    box-shadow: 3px 3px 0 0 #22c55e; /* green-500 */
+}
+
+.greenShadow:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 6px 6px 0 0 #22c55e;
+}
