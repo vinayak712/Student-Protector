@@ -1,13 +1,19 @@
 
 import MainPage from './pages/mainPage'
 import Hero from './pages/Hero'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 function App() {
   
+ {/*  */}
 
   return (
     <>
-      {/* <MainPage/> */}
-      <Hero/>
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainPage />}></Route>
+          <Route path="/login" element={ <Hero/>}></Route>
+        </Routes>
+     </Router>
     </>
   )
 }
