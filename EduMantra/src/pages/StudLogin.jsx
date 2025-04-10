@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import { User, Mail, Lock, Eye, EyeOff, Loader } from "lucide-react";
+import { GoogleLogin } from '@react-oauth/google';
 function StudLogin() {
     const [showP, setShowP] = useState(false);
     const [formData, setFormData] = useState({
