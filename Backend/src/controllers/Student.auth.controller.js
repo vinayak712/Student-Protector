@@ -73,4 +73,8 @@ try {
 }
  }
 
-export { Signup, Login, Logout };
+
+ async function Check(req,res) {
+    
+ }
+export { Signup, Login, Logout,Check };

@@ -9,7 +9,7 @@ import jwt from 'jsonwebtoken'
          maxAge: 7 * 24 * 60 * 60 * 1000,
          httpOnly: true,
          sameSite: "strict",
-
+         secure: process.env.NODE_ENV !== "development",
      })
      console.log("Token Generated:", token); 
      return token;
