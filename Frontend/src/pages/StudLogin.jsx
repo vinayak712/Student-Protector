@@ -12,9 +12,9 @@ function StudLogin() {
     })
   return (
       <>
-          <div className='h-screen w-screen bg-gradient-to-r from-slate-900 to-slate-950 flex
+          <div className='min-h-screen pt-[50px] w-screen bg-gradient-to-r from-slate-900 to-slate-950 flex
           items-center justify-center'>
-              <div className='flex  flex-col items-center gap-10  justify-center bg-slate-950  w-[500px] h-[750px] rounded-2xl border-[2px] text-white' >
+              <div className='flex  flex-col items-center gap-10  justify-center bg-slate-950  w-[650px] h-[700px] rounded-2xl border-[2px]  text-white' >
                   
                   <h1 className=' text-5xl  animate-pulse font-bold text-green-500'> Student <span className='text-blue-500'>Login</span></h1>
                   
@@ -57,7 +57,8 @@ function StudLogin() {
             <button className='text-2xl bg-green-500   w-[80%] rounded-2xl py-3 px-3  p-4  border-[2px]  hover:bg-green-700 transition-all duration-300'>Submit</button>
 <p>Create Account 👉 <Link to="/stusignup"><span className='text-green-500 text-lg'>Signup</span></Link> </p>
               </div>
-      </div>
+          </div>
+          
       </>
   )
 }

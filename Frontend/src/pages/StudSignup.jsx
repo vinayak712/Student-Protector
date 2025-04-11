@@ -4,16 +4,16 @@ import { User, Mail, Lock, Eye, EyeOff, Loader } from "lucide-react";
 
 function StudSignup() {
     const [showP, setShowP] = useState(false);
-    const[Formdata, setFormdata] = useState( {
+    const[FormData, setFormdata] = useState( {
         name:"",
         email: "",
-Password:"",
+password:"",
     })
   return (
       <>
-         <div className='h-screen w-screen bg-gradient-to-r from-slate-900 to-slate-950 flex
+         <div className='min-h-screen w-screen pt-[50px]    bg-gradient-to-r from-slate-900 to-slate-950 flex
           items-center justify-center'>
-              <div className='flex  flex-col items-center gap-10  justify-center bg-slate-950  w-[500px] h-[750px] rounded-2xl border-[2px] text-white' >
+              <div className='flex  flex-col items-center gap-10  justify-center bg-slate-950  w-[650px] h-[700px] rounded-2xl border-[2px] text-white' >
                   
                   <h1 className=' text-5xl  animate-pulse font-bold text-green-500'> Student <span className='text-blue-500'>Signup</span></h1>
                   
@@ -23,7 +23,7 @@ Password:"",
                 
                       <input type="text" name="" id="" className=' input p-3 w-full bg-slate-800  rounded-2xl outline-none focus:ring-2 focus:ring-green-500'
                           placeholder='Enter your name'
-                      value={FormData.name} onChange={(e)=>{setFormdata({...Formdata,name:e.target.value})}}/>   
+                      value={FormData.name} onChange={(e)=>{setFormdata({...FormData,name:e.target.value})}}/>   
                       
                       <label className='text-2xl flex items-center gap-x-3 '> Email <Mail className='text-green-500' /></label>
                 

@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import StudLogin from './pages/StudLogin'
 import StudSignup from './pages/StudSignup'
 import Profile from './pages/profile'
+import NavBar from './components/navBar'
 function App() {
   
 
@@ -12,6 +13,7 @@ function App() {
   return (
     <>
       <Router>
+      <NavBar/>
         <Routes>
           <Route path="/" element={<MainPage />}></Route>
           <Route path="/login" element={<Hero />}></Route>
