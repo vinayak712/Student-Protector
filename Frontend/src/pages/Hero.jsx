@@ -2,7 +2,9 @@ import React from 'react'
 import { PiStudentBold } from "react-icons/pi";
 import { FaUsers } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+
 function Hero() {
+ 
   return (
       <>
           <div className=' bg-gradient-to-r from-slate-900 to-slate-950 h-screen w-screen flex items-center justify-center'>
