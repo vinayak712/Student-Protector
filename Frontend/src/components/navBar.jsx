@@ -5,7 +5,7 @@ function NavBar() {
   return (
     <div className='w-screen top-0 bg-gradient-to-r from-slate-900 to-slate-950 fixed '>
       {/* Navbar Container */}
-      <div className='h-[80px] w-full flex items-center justify-between px-6 backdrop-blur-xl relative '>
+      <div className='h-[100px] w-full flex items-center justify-between px-6 backdrop-blur-xl relative '>
               <Link to='/'>
               <div className='flex items-center justify-between hover:scale-125 transition duration-200 '>
           <img src={logo} alt="Logo" className='w-20 h-20 rounded-full' />

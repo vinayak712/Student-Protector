@@ -16,7 +16,7 @@ function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 pt-[50px]">
       <div className="max-w-4xl w-full bg-slate-800 rounded-xl shadow-xl overflow-hidden">
         <div className="flex flex-col md:flex-row">
           {/* Profile Sidebar */}
@@ -47,6 +47,10 @@ function Profile() {
               <div className="flex items-center gap-2 text-slate-400">
                 <BookOpen className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">Computer Science</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-400">
+                <BookOpen className="w-4 h-4 text-blue-500" />
+                <span className="text-sm">1DS23CS257</span>
               </div>
               <div className="flex items-center gap-2 text-slate-400">
                 <Calendar className="w-4 h-4 text-blue-500" />

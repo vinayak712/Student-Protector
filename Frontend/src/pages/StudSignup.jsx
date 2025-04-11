@@ -13,7 +13,7 @@ password:"",
       <>
          <div className='min-h-screen w-screen pt-[50px]    bg-gradient-to-r from-slate-900 to-slate-950 flex
           items-center justify-center'>
-              <div className='flex  flex-col items-center gap-10  justify-center bg-slate-950  w-[650px] h-[700px] rounded-2xl border-[2px] text-white' >
+              <div className='flex  flex-col items-center gap-10  justify-center bg-slate-950  w-[650px] h-[680px] rounded-2xl border-[2px] text-white' >
                   
                   <h1 className=' text-5xl  animate-pulse font-bold text-green-500'> Student <span className='text-blue-500'>Signup</span></h1>
                   
