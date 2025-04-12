@@ -13,7 +13,7 @@ async function Signup(req, res) {
         if (password.length < 6) {
             return res.status(400).json({ Message: "The password length must be greater than 5" });
         }
-        const student = await student.findOne({ email });
+        const student = await Student.findOne({ email });
         if (student) {
             return res.status(400).json({ Message: "Student Already Exist" });
         }
@@ -25,17 +25,21 @@ const salt = await bcrypt.genSalt(10);
             password: hashedPassword,
         });
         if (newStudent) {
-            generateToken(newStudent._id, res);
             await newStudent.save();
+            generateToken(newStudent._id, res);
             res.status(201).json({
                 _id: newStudent._id,
                 name: newStudent.name,
                 email: newStudent.email,
             });
         }
+        
         else {
             return res.status(400).json({ Message: "Invaild Detailes" })
         }
+        console.log("Received signup data:", req.body);
+        console.log("New Student:", newStudent);
+
     } catch (error) {
         console.log("Error in signUp page ", error.message);
         res.status(400).json({ Message: "Internal Server Error" });

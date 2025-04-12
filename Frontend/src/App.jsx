@@ -1,5 +1,6 @@
 
 import MainPage from './pages/mainPage'
+import { Toaster } from 'react-hot-toast';
 import Hero from './pages/Hero'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import StudLogin from './pages/StudLogin'
@@ -22,7 +23,7 @@ function App() {
           <Route path='/stuProfile' element={  <Profile/>}></Route>
         </Routes>
      </Router>
-    
+    <Toaster/>
     
     </>
   )
