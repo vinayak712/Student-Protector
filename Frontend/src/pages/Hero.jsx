@@ -1,4 +1,3 @@
-import React from 'react'
 import { PiStudentBold } from "react-icons/pi";
 import { FaUsers } from "react-icons/fa";
 import { Link } from 'react-router-dom';

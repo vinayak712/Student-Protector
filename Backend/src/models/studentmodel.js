@@ -12,9 +12,16 @@ const StudentSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minlength: 6,
-        
+        minlength: 6,    
     },
+    usn:{
+        type:String,
+        required:true,
+        unique:true,
+    },
+    profile_pic:{
+        type:String,
+    }
 
 }
 )

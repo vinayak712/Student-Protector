@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Camera, User, Mail, BookOpen, Save, Calendar } from 'lucide-react';
 
 function Profile() {
