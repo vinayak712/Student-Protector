@@ -8,6 +8,7 @@ import StudSignup from './pages/StudSignup'
 import Profile from './pages/profile'
 import About from './pages/About'
 import NavBar from './components/navBar'
+import Dashboard from './pages/dashboard';
 function App() {
 
 
