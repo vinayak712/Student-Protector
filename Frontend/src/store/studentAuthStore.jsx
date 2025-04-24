@@ -9,7 +9,6 @@ export const studentAuthStore = create((set) => ({
     isSignup: false,
     isChecking: false,
     studentUser: null,
-
     checkAuth: async () => {
         set({ isChecking: true });
         try {

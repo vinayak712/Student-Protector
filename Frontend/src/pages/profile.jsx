@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Camera, User, Mail, BookOpen, Save, Calendar } from 'lucide-react';
+import { useState } from "react";
+import { Camera, User, Mail, BookOpen, Save, Calendar } from "lucide-react";
+import { studentAuthStore } from "../store/studentAuthStore";
 
 function Profile() {
   const [formData, setFormData] = useState({
@@ -9,7 +10,7 @@ function Profile() {
     joiningYear: "",
     passingYear: "",
   });
-
+  const { studentUser } = studentAuthStore();
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
@@ -34,15 +35,22 @@ function Profile() {
                 className="absolute bottom-0 right-0 bg-blue-500 p-2 rounded-full cursor-pointer hover:bg-blue-600 transition-colors"
               >
                 <Camera className="w-4 h-4 text-white" />
-                <input type="file" id="avatar-upload" className="hidden" accept="image/*" />
+                <input
+                  type="file"
+                  id="avatar-upload"
+                  className="hidden"
+                  accept="image/*"
+                />
               </label>
             </div>
-            <h2 className="mt-4 text-xl font-semibold text-white">Student</h2>
-            <p className="text-slate-400 text-sm">student@example.com</p>
+            <h2 className="mt-4 text-xl font-semibold text-white">
+              {studentUser?.name}
+            </h2>
+            <p className="text-slate-400 text-sm">{studentUser?.email}</p>
             <div className="mt-6 w-full space-y-3">
               <div className="flex items-center gap-2 text-slate-400">
                 <Mail className="w-4 h-4 text-blue-500" />
-                <span className="text-sm">Email Verified</span>
+                <span className="text-sm">{ studentUser?.email?'Email Verified':"Not Verified"}</span>
               </div>
               <div className="flex items-center gap-2 text-slate-400">
                 <BookOpen className="w-4 h-4 text-blue-500" />
@@ -50,7 +58,7 @@ function Profile() {
               </div>
               <div className="flex items-center gap-2 text-slate-400">
                 <BookOpen className="w-4 h-4 text-blue-500" />
-                <span className="text-sm">1DS23CS257</span>
+                <span className="text-sm">{studentUser?.usn}</span>
               </div>
               <div className="flex items-center gap-2 text-slate-400">
                 <Calendar className="w-4 h-4 text-blue-500" />
@@ -61,7 +69,9 @@ function Profile() {
 
           {/* Form Section */}
           <div className="flex-1 p-6">
-            <h1 className="text-2xl font-bold text-white mb-6">Profile Details</h1>
+            <h1 className="text-2xl font-bold text-white mb-6">
+              Profile Details
+            </h1>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-slate-300 mb-1 flex items-center gap-2">
@@ -71,7 +81,9 @@ function Profile() {
                 <input
                   type="text"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="Enter your full name"
                 />
@@ -85,7 +97,9 @@ function Profile() {
                 <input
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="Enter your email"
                 />
@@ -99,7 +113,9 @@ function Profile() {
                 <input
                   type="text"
                   value={formData.usn}
-                  onChange={(e) => setFormData({ ...formData, usn: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, usn: e.target.value })
+                  }
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="1DS23CS***"
                 />
@@ -114,7 +130,9 @@ function Profile() {
                   <input
                     type="number"
                     value={formData.joiningYear}
-                    onChange={(e) => setFormData({ ...formData, joiningYear: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, joiningYear: e.target.value })
+                    }
                     className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     placeholder="2023"
                     min="2000"
@@ -130,7 +148,9 @@ function Profile() {
                   <input
                     type="number"
                     value={formData.passingYear}
-                    onChange={(e) => setFormData({ ...formData, passingYear: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, passingYear: e.target.value })
+                    }
                     className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     placeholder="2027"
                     min="2000"

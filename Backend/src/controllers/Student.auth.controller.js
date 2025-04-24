@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
+import { error } from "console";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -119,5 +120,13 @@ async function Logout(req, res) {
   }
 }
 
-async function Check(req, res) {}
+async function Check(req, res) {
+  try {
+    res.status(200).json(req.student)
+  }
+  catch(e){
+console.log('Error while checking Authenciation'+e );
+res.status(400).json({Message:'Check Function error'})
+  }
+}
 export { Signup, Login, Logout, Check };
