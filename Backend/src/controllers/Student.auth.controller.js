@@ -89,17 +89,18 @@ async function Signup(req, res) {
 }
 
 async function Login(req, res) {
-  const { name, email, password } = req.body;
+  const { email, password } = req.body;
   try {
     const student = await Student.findOne({ email });
     if (!student) {
-      return res.status(400).json({ Message: "Invalid Creandistials" });
+      return res.status(400).json({ Message: "Invalid Credentials" });
     }
     const isPassword = await bcrypt.compare(password, student.password);
     if (!isPassword) {
       return res.status(400).json({ Message: "Invalid Password" });
     }
-    generateToken(student._id, res);
+    const token = generateToken(student._id, res); // Generate the token
+    console.log("JWT Token at Login:", token); // Print the token to the console
     res.status(201).json({
       name: student.name,
       _id: student._id,
@@ -118,6 +119,30 @@ async function Logout(req, res) {
     res.status(400).json("Error While LogOut" + error.message);
   }
 }
+async function Studinfo(req, res) {
+  try {
+    console.log("Student ID from token:", req.user._id); // Debugging
+    const studentId = req.user._id;
 
+    const student = await Student.findById(studentId).select(
+      "-password -__v -createdAt -updatedAt"
+    );
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    console.log("Student data fetched:", student); // Debugging
+    res.status(200).json({
+      _id: student._id,
+      name: student.name,
+      email: student.email,
+      usn: student.usn,
+      profile_pic: student.profile_pic,
+    });
+  } catch (error) {
+    console.error("Studinfo controller error:", error.message);
+    res.status(500).json({ message: "Server error: " + error.message });
+  }
+}
 async function Check(req, res) {}
-export { Signup, Login, Logout, Check };
+export { Signup, Login, Logout, Check, Studinfo };

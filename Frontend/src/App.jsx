@@ -1,4 +1,3 @@
-
 import MainPage from './pages/mainPage'
 import { Toaster } from 'react-hot-toast';
 import Hero from './pages/Hero'
@@ -24,6 +23,7 @@ function App() {
           <Route path='/stusignup' element={<StudSignup />}></Route>
           <Route path='/stuProfile' element={<Profile />}></Route>
           <Route path='/stuabout' element={<About />}></Route>
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
       <Toaster />

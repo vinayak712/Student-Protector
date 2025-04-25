@@ -13,7 +13,7 @@ function About() {
 
         <section className='text-lg leading-relaxed animate__animated animate__fadeIn animate__delay-1s'>
           <p>
-            Welcome to the <span className="text-green-400 font-semibold">Student Proctor Management System</span> — a platform built to simplify and enhance the academic 🎓 mentoring process for students and proctors alike.
+            Welcome to the <span className="text-green-400 font-semibold">EduMantra</span> — a platform built to simplify and enhance the academic 🎓 mentoring process for students and proctors alike.
           </p>
         </section>
 
