@@ -2,7 +2,10 @@ import logo from '../assets/logo.png';
 import { Link } from "react-router-dom";
 import { studentAuthStore } from '../store/studentAuthStore';
 function NavBar() {
-  const { studentUser } = studentAuthStore();
+  const { studentUser, Logout } = studentAuthStore();
+  function handle() {
+    Logout();
+  }
   return (
     <div className='w-screen top-0 bg-gradient-to-r from-slate-900 to-slate-950 fixed '>
       {/* Navbar Container */}
@@ -34,11 +37,12 @@ function NavBar() {
                   </button></Link>
 
                 <button className=' hover-underline-green hover:text-green-500 transition duration-200 cursor-pointer' aria-label="Logout">
-                  <h2>Logout</h2>
+                  <h2 onClick={handle}>Logout</h2>
                 </button>
               </>
             ) : (
               <>
+              
                 <Link to='/stulogin'>
                   <button className='hover-underline-green hover:text-green-500 transition duration-200 cursor-pointer' aria-label="Login">
                     <h2>Login</h2>
