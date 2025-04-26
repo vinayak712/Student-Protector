@@ -7,11 +7,7 @@ export const studentAuthStore = create((set) => ({
     isSignup: false,
     isChecking: false,
     studentUser: null,
-<<<<<<< HEAD
     studentInfo: null, // Add state for student info
-
-=======
->>>>>>> 828c72edcbd7cd6888c10523c5c4be4ca6ef270d
     checkAuth: async () => {
         set({ isChecking: true });
         try {

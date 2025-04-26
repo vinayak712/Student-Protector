@@ -9,22 +9,23 @@ import Profile from './pages/profile'
 import About from './pages/About'
 import NavBar from './components/navBar'
 import Dashboard from './pages/dashboard';
-import { studentAuthStore } from './store/studentAuthStore';
+import { studentAuthStore } from './api/studentAuthStore';
 import { useEffect } from 'react';
+
 function App() {
   const { checkAuth, isChecking, studentUser } = studentAuthStore();
-  useEffect(() => {
-    checkAuth()
-},[  checkAuth])
-  if (isChecking && !studentUser) {
-    return (
-      <>
-        <div className='flex items-center justify-center h-screen'>
-          <Loader className='size-10 animate-spin'/>
-      </div>
-      </>
-  )
-}
+
+  // useEffect(() => {
+  //   checkAuth();
+  // }, [checkAuth]);
+
+  // if (isChecking) {
+  //   return (
+  //     <div className="flex items-center justify-center h-screen">
+  //       <Loader className="size-10 animate-spin" />
+  //     </div>
+  //   );
+  //}
   return (
     <>
       <Router>

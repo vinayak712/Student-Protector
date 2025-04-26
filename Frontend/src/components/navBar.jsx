@@ -1,6 +1,6 @@
 import logo from '../assets/logo.png';
 import { Link } from "react-router-dom";
-import { studentAuthStore } from '../store/studentAuthStore';
+import { studentAuthStore } from '../api/studentAuthStore';
 function NavBar() {
   const { studentUser, Logout } = studentAuthStore();
   function handle() {
