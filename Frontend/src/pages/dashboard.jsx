@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { studentAuthStore } from "../store/studentAuthStore";
+import { studentAuthStore } from "../api/studentAuthStore";
 
 function Dashboard() {
   const { studentInfo, fetchStudentInfo } = studentAuthStore();

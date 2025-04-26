@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { User, Mail, Lock, Eye, EyeOff, Loader } from "lucide-react";
-import { studentAuthStore } from "../store/studentAuthStore";
+import { studentAuthStore } from "../api/studentAuthStore";
 function StudLogin() {
   const [showP, setShowP] = useState(false);
   const [formData, setFormData] = useState({

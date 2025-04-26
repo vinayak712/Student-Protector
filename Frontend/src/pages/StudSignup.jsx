@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { Link } from "react-router-dom";
 import { User, Mail, Lock, Eye, EyeOff, Loader, Upload, BookOpen } from "lucide-react";
-import { studentAuthStore } from '../store/studentAuthStore';
+import { studentAuthStore } from '../api/studentAuthStore';
 import toast from 'react-hot-toast';
 
 function StudSignup() {

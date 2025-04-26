@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Camera, User, Mail, BookOpen, Save, Calendar } from "lucide-react";
-import { studentAuthStore } from "../store/studentAuthStore";
+import { studentAuthStore } from "../api/studentAuthStore";
 
 function Profile() {
   const [formData, setFormData] = useState({
