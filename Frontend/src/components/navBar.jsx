@@ -7,7 +7,7 @@ function NavBar() {
     Logout();
   }
   return (
-    <div className='w-screen top-0 bg-gradient-to-r from-slate-900 to-slate-950 fixed '>
+    <div className='w-screen top-0 bg-gradient-to-r from-slate-900 to-slate-950 fixed  z-50'>
       {/* Navbar Container */}
       <div className='h-[100px] w-full flex items-center justify-between px-6 backdrop-blur-xl relative '>
         <Link to='/'>
