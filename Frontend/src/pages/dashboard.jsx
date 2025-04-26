@@ -19,11 +19,11 @@ function Dashboard() {
   }
 
   function toggleMenu() {
-    setMenuOpen(prev => !prev);
+    setMenuOpen((prev) => !prev);
   }
 
   return (
-    <div className=" pt-[100px] min-h-screen bg-gradient-to-r from-slate-900 to-slate-950 relative">
+    <div className="pt-[100px] min-h-screen bg-gradient-to-r from-slate-900 to-slate-950 relative">
       {/* Top Menu Button */}
       <div className="p-4">
         <button onClick={toggleMenu}>
@@ -70,6 +70,36 @@ function Dashboard() {
           <button className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700 transition text-white bg-slate-800">
             <Settings /> Settings
           </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="ml-64 p-6">
+        <h1 className="text-3xl font-bold text-white mb-6">Welcome, {studentInfo.name}!</h1>
+
+        {/* Student Profile Section */}
+        <div className="bg-slate-800 p-6 rounded-lg shadow-lg text-white">
+          <h2 className="text-2xl font-bold mb-4">Your Profile</h2>
+          <div className="flex items-center gap-6">
+            {/* Profile Picture */}
+            <img
+              src={studentInfo.profile_pic}
+              alt="Profile"
+              className="w-24 h-24 rounded-full object-cover border-4 border-slate-700"
+            />
+            {/* Profile Details */}
+            <div>
+              <p className="text-lg">
+                <span className="font-bold">Name:</span> {studentInfo.name}
+              </p>
+              <p className="text-lg">
+                <span className="font-bold">Email:</span> {studentInfo.email}
+              </p>
+              <p className="text-lg">
+                <span className="font-bold">USN:</span> {studentInfo.usn}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
