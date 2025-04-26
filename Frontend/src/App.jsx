@@ -15,17 +15,6 @@ import { useEffect } from 'react';
 function App() {
   const { checkAuth, isChecking, studentUser } = studentAuthStore();
 
-  // useEffect(() => {
-  //   checkAuth();
-  // }, [checkAuth]);
-
-  // // if (isChecking) {
-  // //   return (
-  // //     <div className="flex items-center justify-center h-screen">
-  // //       <Loader className="size-10 animate-spin" />
-  // //     </div>
-  // //   );
-  // // }
   return (
     <>
       <Router>
