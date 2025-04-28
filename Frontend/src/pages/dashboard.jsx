@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { studentAuthStore } from "../api/studentAuthStore";
-import { Menu, Home, Settings, Calendar, BarChart, User, Book, X } from "lucide-react";
+import { Home, Settings, Calendar, BarChart, User, Book } from "lucide-react";
 
 function Dashboard() {
   const { studentInfo, fetchStudentInfo } = studentAuthStore();
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    fetchStudentInfo(); // Fetch student info when the component mounts
+    fetchStudentInfo();
   }, [fetchStudentInfo]);
 
   if (!studentInfo) {
@@ -18,90 +18,55 @@ function Dashboard() {
     );
   }
 
-  function toggleMenu() {
-    setMenuOpen((prev) => !prev);
-  }
-
   return (
     <div className="pt-[100px] min-h-screen bg-gradient-to-r from-slate-900 to-slate-950 relative">
-      {/* Top Menu Button */}
-      <div className="p-4">
-        <button onClick={toggleMenu}>
-          {menuOpen ? (
-            <X className="text-white size-10" />
-          ) : (
-            <Menu className="text-white size-10" />
-          )}
-        </button>
-      </div>
-
+      
       {/* Sidebar */}
-      <div
-        className={`fixed top-[100px] left-0 h-full bg-slate-900 shadow-lg transform transition-transform duration-300 ease-in-out
-         ${menuOpen ? "translate-x-0" : "-translate-x-full"}
-         w-64 p-6 z-50`}
-      >
-        {/* Close Button Inside Sidebar */}
-        <button
-          className="absolute top-4 right-4 text-white"
-          onClick={toggleMenu}
-        >
-          <X className="size-10" />
-        </button>
-
+      <div className="fixed top-[100px] left-0 h-full bg-slate-900 shadow-lg w-64 p-6 z-50">
         <h1 className="text-2xl font-bold text-white mb-6 text-center">Facilities</h1>
-
         <div className="flex flex-col gap-4">
-          <button className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700 transition text-white bg-slate-800">
-            <Home /> Dashboard
-          </button>
-          <button className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700 transition text-white bg-slate-800">
-            <Book /> Courses
-          </button>
-          <button className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700 transition text-white bg-slate-800">
-            <User /> Chats
-          </button>
-          <button className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700 transition text-white bg-slate-800">
-            <BarChart /> Grades
-          </button>
-          <button className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700 transition text-white bg-slate-800">
-            <Calendar /> Schedule
-          </button>
-          <button className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700 transition text-white bg-slate-800">
-            <Settings /> Settings
-          </button>
+          {[
+            { icon: <Home />, label: "Dashboard" },
+            { icon: <Book />, label: "Courses" },
+            { icon: <User />, label: "Chats" },
+            { icon: <BarChart />, label: "Grades" },
+            { icon: <Calendar />, label: "Schedule" },
+            { icon: <Settings />, label: "Settings" },
+          ].map((item, idx) => (
+            <button
+              key={idx}
+              className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
+            >
+              {item.icon} {item.label}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="ml-64 p-6">
-        <h1 className="text-3xl font-bold text-white mb-6">Welcome, {studentInfo.name}!</h1>
+      <div className="ml-64 flex items-center justify-center h-[calc(100vh-100px)] w-[calc(100%-16rem)]">
+        <div className="text-center flex flex-col items-center justify-center space-y-8 animate-fadeIn">
+          
+          {/* Welcome Text */}
+          <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight transition-all duration-700 animate-pulse">
+            Welcome, {studentInfo.name}!
+          </h1>
 
-        {/* Student Profile Section */}
-        <div className="bg-slate-800 p-6 rounded-lg shadow-lg text-white">
-          <h2 className="text-2xl font-bold mb-4">Your Profile</h2>
-          <div className="flex items-center gap-6">
-            {/* Profile Picture */}
-            <img
-              src={studentInfo.profile_pic}
-              alt="Profile"
-              className="w-24 h-24 rounded-full object-cover border-4 border-slate-700"
-            />
-            {/* Profile Details */}
-            <div>
-              <p className="text-lg">
-                <span className="font-bold">Name:</span> {studentInfo.name}
-              </p>
-              <p className="text-lg">
-                <span className="font-bold">Email:</span> {studentInfo.email}
-              </p>
-              <p className="text-lg">
-                <span className="font-bold">USN:</span> {studentInfo.usn}
-              </p>
-            </div>
+          {/* EduMantra Title */}
+          <div className="border-4 border-blue-700 rounded-2xl p-6 shadow-lg hover:scale-105 transition-transform duration-500">
+            <h2 className="text-3xl md:text-5xl font-bold text-white">
+              Edu<span className="text-blue-500">Mantra</span>
+            </h2>
           </div>
+
+          {/* Subtext */}
+          <p className="text-lg md:text-xl text-gray-400 tracking-wide animate-fadeIn">
+            Select any facility from the menu and start exploring!
+          </p>
+
         </div>
       </div>
+
     </div>
   );
 }
