@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { studentAuthStore } from "../api/studentAuthStore";
-import { Home, Settings, Calendar, BarChart, User, Book } from "lucide-react";
+import NavDash from "../components/navDash";
 
 function Dashboard() {
   const { studentInfo, fetchStudentInfo } = studentAuthStore();
@@ -21,28 +21,7 @@ function Dashboard() {
   return (
     <div className="pt-[100px] min-h-screen bg-gradient-to-r from-slate-900 to-slate-950 relative">
       
-      {/* Sidebar */}
-      <div className="fixed top-[100px] left-0 h-full bg-slate-900 shadow-lg w-64 p-6 z-50">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">Facilities</h1>
-        <div className="flex flex-col gap-4">
-          {[
-            { icon: <Home />, label: "Dashboard" },
-            { icon: <Book />, label: "Courses" },
-            { icon: <User />, label: "Chats" },
-            { icon: <BarChart />, label: "Grades" },
-            { icon: <Calendar />, label: "Schedule" },
-            { icon: <Settings />, label: "Settings" },
-          ].map((item, idx) => (
-            <button
-              key={idx}
-              className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
-            >
-              {item.icon} {item.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
+<NavDash/>
       {/* Main Content */}
       <div className="ml-64 flex items-center justify-center h-[calc(100vh-100px)] w-[calc(100%-16rem)]">
         <div className="text-center flex flex-col items-center justify-center space-y-8 animate-fadeIn">
