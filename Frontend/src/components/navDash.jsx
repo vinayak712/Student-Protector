@@ -22,7 +22,7 @@ function NavDash() {
   return (
     <nav
       className={`h-screen ${
-        isOpen ? "w-64" : "w-20"
+        isOpen ? "w-64" : "w-25"
       } bg-slate-900 transition-all duration-300 flex flex-col justify-between p-4 z-50 fixed left-0 top-0`}
     >
       {/* Logo + Toggle */}
@@ -43,6 +43,12 @@ function NavDash() {
 
         {/* Navigation Links */}
         <ul className="flex flex-col gap-3">
+          <li>
+        
+            <Link to='/stuProfile' className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300">
+            <img src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop' alt="Logo" className="w-12 h-12 rounded-full" />
+              {isOpen && <span>Profile</span>}</Link>
+          </li>
           <li>
             <Link
               to="/dashboard"

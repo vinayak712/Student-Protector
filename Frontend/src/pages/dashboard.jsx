@@ -19,13 +19,10 @@ function Dashboard() {
   }
 
   return (
-    <div className="pt-[100px] min-h-screen bg-gradient-to-r from-slate-900 to-slate-950 relative">
-      
-<NavDash/>
-      {/* Main Content */}
-      <div className="ml-64 flex items-center justify-center h-[calc(100vh-100px)] w-[calc(100%-16rem)]">
+    <div className="min-h-screen bg-gradient-to-r from-slate-900 to-slate-950 relative">
+      <NavDash />
+      <div className="ml-64 flex items-center justify-center h-screen w-[calc(100%-16rem)]">
         <div className="text-center flex flex-col items-center justify-center space-y-8 animate-fadeIn">
-          
           {/* Welcome Text */}
           <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight transition-all duration-700 animate-pulse">
             Welcome, {studentInfo.name}!
@@ -42,10 +39,8 @@ function Dashboard() {
           <p className="text-lg md:text-xl text-gray-400 tracking-wide animate-fadeIn">
             Select any facility from the menu and start exploring!
           </p>
-
         </div>
       </div>
-
     </div>
   );
 }
