@@ -7,7 +7,7 @@ function NavBar() {
     Logout();
   }
   return (
-    <div className='w-screen top-0 bg-gradient-to-r from-slate-900 to-slate-950 fixed  z-50'>
+    <div className='w-screen top-0  fixed  z-50'>
       {/* Navbar Container */}
       <div className='h-[100px] w-full flex items-center justify-between px-6 backdrop-blur-xl relative '>
         <Link to='/'>
@@ -19,7 +19,7 @@ function NavBar() {
           </div>
         </Link>
 
-        <div className='absolute left-1/2 transform -translate-x-1/2 px-8 py-3 bg-white/10 backdrop-blur-xl shadow-md ring-1 ring-white/20 rounded-full flex gap-10 text-white font-semibold text-xl'>
+        <div className='absolute left-1/2 transform -translate-x-1/2 px-8 py-3 backdrop-blur-3xl shadow-md ring-1 rounded-full flex gap-10 text-white font-semibold text-xl'>
           <Link to='/stuabout'>
             <button className=' hover-underline-green hover:text-green-500 transition duration-200 cursor-pointer' aria-label="About">
               <h2>About</h2>

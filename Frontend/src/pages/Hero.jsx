@@ -19,6 +19,7 @@ function Hero() {
             </p>
           </div>
         </Link>
+
         <Link to="/teacherlogin" className="group">
           <div className="w-[320px] h-[250px] bg-slate-950/80 rounded-2xl border-2 border-slate-800 flex flex-col items-center justify-center gap-5 shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:border-blue-500 group-hover:shadow-blue-500/30 cursor-pointer backdrop-blur-md">
             <span className="text-5xl text-blue-400 group-hover:text-blue-500 transition">

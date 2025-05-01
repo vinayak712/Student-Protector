@@ -17,6 +17,7 @@ import Dashboard from "./pages/dashboard";
 import { studentAuthStore } from "./api/studentAuthStore";
 import NavDash from "./components/navDash";
 
+
 function App() {
   return (
     <Router>
