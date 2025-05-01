@@ -4,7 +4,6 @@ import Student from "../models/studentmodel.js";
 async function Protect(req, res, next) {
     try {
         const token = req.cookies.jwt;
-        console.log("Token received:", token); // Debugging
         if (!token) {
             return res.status(401).json({ Message: 'Unauthorized - No token provided' });
         }

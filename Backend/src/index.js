@@ -1,18 +1,20 @@
 import express from "express";
 import dotenv from "dotenv";
-import cors from 'cors'
-import path from 'path'
+import cors from 'cors';
+import path from 'path';
 import cookieParser from 'cookie-parser';
 import authRouter from "./routes/Student.auth.route.js";
 import ConnectDb from "./lib/DB.js";
 import multer from 'multer';
+import fs from 'fs';
 
 const app = express();
 dotenv.config();
 const __dirname = path.resolve();
 app.use(express.json());
-app.use(cookieParser()); 
+app.use(cookieParser());
 const port = process.env.PORT || 7000;
+
 
 // Configure file uploads
 const storage = multer.diskStorage({
@@ -25,7 +27,6 @@ const storage = multer.diskStorage({
 });
 
 // Make sure uploads directory exists
-import fs from 'fs';
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
