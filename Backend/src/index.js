@@ -4,6 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import authRouter from "./routes/Student.auth.route.js";
+import Teacherrouter from "./routes/Teacher.auth.route.js";
 import chartRouter from "./routes/chart.route.js"; // Add this line
 import ConnectDb from "./lib/DB.js";
 import multer from 'multer';
@@ -54,8 +55,8 @@ if (process.env.NODE_ENV === "production") {
 
 // Apply routes
 app.use("/api/auth", authRouter);
-app.use("/api/charts", chartRouter); // Add this line
-
+app.use("/api/charts", chartRouter);// Add this line
+app.use('/api/tchauth', Teacherrouter);
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
   ConnectDb();
