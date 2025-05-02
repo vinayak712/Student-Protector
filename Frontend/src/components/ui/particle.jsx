@@ -1,231 +1,280 @@
-import { useEffect, useRef } from "react";
-import { Renderer, Camera, Geometry, Program, Mesh } from "ogl";
-
-const defaultColors = ["#ffffff", "#ffffff", "#ffffff"];
+import { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 
 const hexToRgb = (hex) => {
   hex = hex.replace(/^#/, "");
   if (hex.length === 3) {
     hex = hex.split("").map((c) => c + c).join("");
   }
-  const int = parseInt(hex, 16);
-  const r = ((int >> 16) & 255) / 255;
-  const g = ((int >> 8) & 255) / 255;
-  const b = (int & 255) / 255;
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
   return [r, g, b];
 };
 
-const vertex = /* glsl */ `
-  attribute vec3 position;
-  attribute vec4 random;
-  attribute vec3 color;
-  
-  uniform mat4 modelMatrix;
-  uniform mat4 viewMatrix;
-  uniform mat4 projectionMatrix;
-  uniform float uTime;
-  uniform float uSpread;
-  uniform float uBaseSize;
-  uniform float uSizeRandomness;
-  
-  varying vec4 vRandom;
-  varying vec3 vColor;
-  
-  void main() {
-    vRandom = random;
-    vColor = color;
-    
-    vec3 pos = position * uSpread;
-    pos.z *= 10.0;
-    
-    vec4 mPos = modelMatrix * vec4(pos, 1.0);
-    float t = uTime;
-    mPos.x += sin(t * random.z + 6.28 * random.w) * mix(0.1, 1.5, random.x);
-    mPos.y += sin(t * random.y + 6.28 * random.x) * mix(0.1, 1.5, random.w);
-    mPos.z += sin(t * random.w + 6.28 * random.y) * mix(0.1, 1.5, random.z);
-    
-    vec4 mvPos = viewMatrix * mPos;
-    gl_PointSize = (uBaseSize * (1.0 + uSizeRandomness * (random.x - 0.5))) / length(mvPos.xyz);
-    gl_Position = projectionMatrix * mvPos;
-  }
-`;
-
-const fragment = /* glsl */ `
-  precision highp float;
-  
-  uniform float uTime;
-  uniform float uAlphaParticles;
-  varying vec4 vRandom;
-  varying vec3 vColor;
-  
-  void main() {
-    vec2 uv = gl_PointCoord.xy;
-    float d = length(uv - vec2(0.5));
-    
-    if(uAlphaParticles < 0.5) {
-      if(d > 0.5) {
-        discard;
-      }
-      gl_FragColor = vec4(vColor + 0.2 * sin(uv.yxx + uTime + vRandom.y * 6.28), 1.0);
-    } else {
-      float circle = smoothstep(0.5, 0.4, d) * 0.8;
-      gl_FragColor = vec4(vColor + 0.2 * sin(uv.yxx + uTime + vRandom.y * 6.28), circle);
-    }
-  }
-`;
+const hexToRgba = (hex, alpha = 1) => {
+  const [r, g, b] = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
 
 const Particles = ({
   particleCount = 200,
   particleSpread = 10,
   speed = 0.1,
-  particleColors,
-  moveParticlesOnHover = false,
-  particleHoverFactor = 1,
-  alphaParticles = false,
-  particleBaseSize = 200, // Increased base size for larger particles
-  sizeRandomness = 1,
-  cameraDistance = 20,
-  disableRotation = false,
+  particleColors = ["#4f46e5", "#6366f1", "#8b5cf6"],
+  moveParticlesOnHover = true,
+  particleHoverFactor = 1.5,
+  alphaParticles = true,
+  particleBaseSize = 3,
+  sizeRandomness = 1.2,
   className,
+  enableGlow = true,
+  enableConnections = true,
+  connectionOpacity = 0.15,
+  connectionThreshold = 8,
+  glowSize = 10,
+  glowColor = "rgba(99, 102, 241, 0.15)",
 }) => {
-  const containerRef = useRef(null);
+  const canvasRef = useRef(null);
+  const particlesRef = useRef([]);
+  const animationRef = useRef(null);
   const mouseRef = useRef({ x: 0, y: 0 });
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  // Resize handler with debounce
+  useEffect(() => {
+    let timeoutId = null;
+    
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (canvasRef.current) {
+          const canvas = canvasRef.current;
+          const { width, height } = canvas.getBoundingClientRect();
+          canvas.width = width * window.devicePixelRatio;
+          canvas.height = height * window.devicePixelRatio;
+          setDimensions({ width: canvas.width, height: canvas.height });
+        }
+      }, 100);
+    };
+    
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial call
+    
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const canvas = canvasRef.current;
+    if (!canvas || dimensions.width === 0) return;
 
-    const renderer = new Renderer({ depth: false, alpha: false }); // Set alpha to false for a solid background
-    const gl = renderer.gl;
-    container.appendChild(gl.canvas);
-    gl.clearColor(0, 0, 0, 1); // Set background color to black
-
-    const camera = new Camera(gl, { fov: 15 });
-    camera.position.set(0, 0, cameraDistance);
-
-    const resize = () => {
-      const width = container.clientWidth;
-      const height = container.clientHeight;
-      renderer.setSize(width, height);
-      camera.perspective({ aspect: gl.canvas.width / gl.canvas.height });
-    };
-    window.addEventListener("resize", resize, false);
-    resize();
-
+    const ctx = canvas.getContext("2d", { alpha: true });
+    const dpr = window.devicePixelRatio;
+    
+    // Track mouse position
     const handleMouseMove = (e) => {
-      const rect = container.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-      mouseRef.current = { x, y };
+      if (!moveParticlesOnHover) return;
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = {
+        x: (e.clientX - rect.left) * dpr,
+        y: (e.clientY - rect.top) * dpr
+      };
     };
-
-    if (moveParticlesOnHover) {
-      container.addEventListener("mousemove", handleMouseMove);
-    }
-
-    const count = particleCount;
-    const positions = new Float32Array(count * 3);
-    const randoms = new Float32Array(count * 4);
-    const colors = new Float32Array(count * 3);
-    const palette = particleColors && particleColors.length > 0 ? particleColors : defaultColors;
-
-    for (let i = 0; i < count; i++) {
-      let x, y, z, len;
-      do {
-        x = Math.random() * 2 - 1;
-        y = Math.random() * 2 - 1;
-        z = Math.random() * 2 - 1;
-        len = x * x + y * y + z * z;
-      } while (len > 1 || len === 0);
-      const r = Math.cbrt(Math.random());
-      positions.set([x * r, y * r, z * r], i * 3);
-      randoms.set([Math.random(), Math.random(), Math.random(), Math.random()], i * 4);
-      const col = hexToRgb(palette[Math.floor(Math.random() * palette.length)]);
-      colors.set(col, i * 3);
-    }
-
-    const geometry = new Geometry(gl, {
-      position: { size: 3, data: positions },
-      random: { size: 4, data: randoms },
-      color: { size: 3, data: colors },
-    });
-
-    const program = new Program(gl, {
-      vertex,
-      fragment,
-      uniforms: {
-        uTime: { value: 0 },
-        uSpread: { value: particleSpread },
-        uBaseSize: { value: particleBaseSize }, // Use the updated base size
-        uSizeRandomness: { value: sizeRandomness },
-        uAlphaParticles: { value: alphaParticles ? 1 : 0 },
-      },
-      transparent: true,
-      depthTest: false,
-    });
-
-    const particles = new Mesh(gl, { mode: gl.POINTS, geometry, program });
-
-    let animationFrameId;
-    let lastTime = performance.now();
-    let elapsed = 0;
-
-    const update = (t) => {
-      animationFrameId = requestAnimationFrame(update);
-      const delta = t - lastTime;
-      lastTime = t;
-      elapsed += delta * speed;
-
-      program.uniforms.uTime.value = elapsed * 0.001;
-
-      if (moveParticlesOnHover) {
-        particles.position.x = -mouseRef.current.x * particleHoverFactor;
-        particles.position.y = -mouseRef.current.y * particleHoverFactor;
-      } else {
-        particles.position.x = 0;
-        particles.position.y = 0;
+    
+    // Initialize particles
+    const initParticles = () => {
+      const palette = particleColors.map(color => hexToRgb(color));
+      const particles = [];
+      
+      for (let i = 0; i < particleCount; i++) {
+        const colorIndex = Math.floor(Math.random() * palette.length);
+        const size = particleBaseSize * (1 + sizeRandomness * (Math.random() - 0.5));
+        
+        particles.push({
+          x: Math.random() * dimensions.width,
+          y: Math.random() * dimensions.height,
+          vx: (Math.random() - 0.5) * speed * 2 * dpr,
+          vy: (Math.random() - 0.5) * speed * 2 * dpr,
+          size: size * dpr,
+          color: palette[colorIndex],
+          alpha: alphaParticles ? Math.random() * 0.5 + 0.3 : 1,
+          // New properties for modern effects
+          pulse: Math.random() * 0.1,
+          pulseSpeed: 0.01 + Math.random() * 0.02,
+          pulseCycle: Math.random() * Math.PI * 2,
+          z: Math.random() * 0.5 + 0.5, // Z depth for parallax effect
+        });
       }
-
-      if (!disableRotation) {
-        particles.rotation.x = Math.sin(elapsed * 0.0002) * 0.1;
-        particles.rotation.y = Math.cos(elapsed * 0.0005) * 0.15;
-        particles.rotation.z += 0.01 * speed;
-      }
-
-      renderer.render({ scene: particles, camera });
+      
+      particlesRef.current = particles;
     };
-
-    animationFrameId = requestAnimationFrame(update);
-
+    
+    // Animation loop
+    const animate = () => {
+      ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+      
+      // Draw connections first (behind particles)
+      if (enableConnections) {
+        ctx.lineWidth = 0.5 * dpr;
+        
+        for (let i = 0; i < particlesRef.current.length; i++) {
+          for (let j = i + 1; j < particlesRef.current.length; j++) {
+            const p1 = particlesRef.current[i];
+            const p2 = particlesRef.current[j];
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            if (dist < particleSpread * connectionThreshold * dpr) {
+              const opacity = (1 - dist / (particleSpread * connectionThreshold * dpr)) * connectionOpacity;
+              // Use gradient for connections for modern look
+              const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+              gradient.addColorStop(0, `rgba(${p1.color[0]}, ${p1.color[1]}, ${p1.color[2]}, ${opacity})`);
+              gradient.addColorStop(1, `rgba(${p2.color[0]}, ${p2.color[1]}, ${p2.color[2]}, ${opacity})`);
+              
+              ctx.strokeStyle = gradient;
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+      
+      // Draw particles
+      particlesRef.current.forEach(p => {
+        // Update pulse cycle
+        p.pulseCycle += p.pulseSpeed;
+        const pulseFactor = 1 + Math.sin(p.pulseCycle) * p.pulse;
+        
+        // Update position
+        p.x += p.vx * p.z; // Parallax effect - faster particles appear closer
+        p.y += p.vy * p.z;
+        
+        // Wrap around edges
+        if (p.x < 0) p.x = dimensions.width;
+        if (p.x > dimensions.width) p.x = 0;
+        if (p.y < 0) p.y = dimensions.height;
+        if (p.y > dimensions.height) p.y = 0;
+        
+        // Mouse interaction
+        if (moveParticlesOnHover && mouseRef.current.x > 0) {
+          const dx = mouseRef.current.x - p.x;
+          const dy = mouseRef.current.y - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < 150 * dpr) {
+            const angle = Math.atan2(dy, dx);
+            const force = (150 * dpr - dist) / (800 * dpr) * particleHoverFactor;
+            p.vx -= Math.cos(angle) * force;
+            p.vy -= Math.sin(angle) * force;
+          }
+        }
+        
+        // Add glow effect for particles
+        if (enableGlow) {
+          const glowRadius = p.size * glowSize * pulseFactor;
+          const radialGradient = ctx.createRadialGradient(
+            p.x, p.y, 0,
+            p.x, p.y, glowRadius
+          );
+          
+          // Custom glow color based on the particle's color
+          const particleGlowColor = `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, 0.08)`;
+          
+          radialGradient.addColorStop(0, particleGlowColor);
+          radialGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          
+          ctx.fillStyle = radialGradient;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, glowRadius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        
+        // Draw actual particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * pulseFactor, 0, Math.PI * 2);
+        
+        // Create gradient fill for better looking particles
+        const gradient = ctx.createRadialGradient(
+          p.x, p.y, 0,
+          p.x, p.y, p.size * pulseFactor
+        );
+        
+        gradient.addColorStop(0, `rgba(${p.color[0] + 30}, ${p.color[1] + 30}, ${p.color[2] + 30}, ${p.alpha})`);
+        gradient.addColorStop(1, `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, ${p.alpha * 0.8})`);
+        
+        ctx.fillStyle = gradient;
+        ctx.fill();
+      });
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    
+    canvas.addEventListener("mousemove", handleMouseMove);
+    
+    initParticles();
+    animationRef.current = requestAnimationFrame(animate);
+    
     return () => {
-      window.removeEventListener("resize", resize);
-      if (moveParticlesOnHover) {
-        container.removeEventListener("mousemove", handleMouseMove);
-      }
-      cancelAnimationFrame(animationFrameId);
-      if (container.contains(gl.canvas)) {
-        container.removeChild(gl.canvas);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
       }
     };
   }, [
+    dimensions,
     particleCount,
     particleSpread,
     speed,
+    particleColors,
     moveParticlesOnHover,
     particleHoverFactor,
     alphaParticles,
     particleBaseSize,
     sizeRandomness,
-    cameraDistance,
-    disableRotation,
+    enableGlow,
+    enableConnections,
+    connectionOpacity,
+    connectionThreshold,
+    glowSize,
+    glowColor,
   ]);
 
   return (
-    <div
-      ref={containerRef}
-      className={`relative w-full h-full ${className}`}
+    <canvas
+      ref={canvasRef}
+      className={`absolute inset-0 w-full h-full ${className || ""}`}
+      style={{ 
+        pointerEvents: "none",
+        width: '100%', 
+        height: '100%'
+      }}
     />
   );
+};
+
+Particles.propTypes = {
+  particleCount: PropTypes.number,
+  particleSpread: PropTypes.number,
+  speed: PropTypes.number,
+  particleColors: PropTypes.arrayOf(PropTypes.string),
+  moveParticlesOnHover: PropTypes.bool,
+  particleHoverFactor: PropTypes.number,
+  alphaParticles: PropTypes.bool,
+  particleBaseSize: PropTypes.number,
+  sizeRandomness: PropTypes.number,
+  className: PropTypes.string,
+  enableGlow: PropTypes.bool,
+  enableConnections: PropTypes.bool,
+  connectionOpacity: PropTypes.number,
+  connectionThreshold: PropTypes.number,
+  glowSize: PropTypes.number,
+  glowColor: PropTypes.string,
 };
 
 export default Particles;

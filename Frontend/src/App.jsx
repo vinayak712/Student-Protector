@@ -13,11 +13,12 @@ import StudSignup from "./pages/StudSignup";
 import Profile from "./pages/profile";
 import About from "./pages/About";
 import NavBar from "./components/navBar";
+import GradesPage from "./pages/GradePage";
 import Dashboard from "./pages/dashboard";
 import { studentAuthStore } from "./api/studentAuthStore";
 import NavDash from "./components/navDash";
-import TeacherLogin from "./Teacher/Pages/login";
-import TeacherSignup from "./Teacher/pages/signup";
+
+
 function App() {
   return (
     <Router>
@@ -69,9 +70,7 @@ function AppRoutes() {
             studentUser ? <Dashboard /> : <Navigate to="/stulogin" replace />
           }
         />
-        <Route path="/teacherlogin" element={<TeacherLogin />}></Route>
-        <Route path="/teachersignup" element={<TeacherSignup/>}></Route>
-      </Routes> 
+      </Routes>
     </>
   );
 }
