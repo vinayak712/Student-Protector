@@ -16,8 +16,8 @@ import NavBar from "./components/navBar";
 import Dashboard from "./pages/dashboard";
 import { studentAuthStore } from "./api/studentAuthStore";
 import NavDash from "./components/navDash";
-
-
+import TeacherLogin from "./Teacher/Pages/login";
+import TeacherSignup from "./Teacher/pages/signup";
 function App() {
   return (
     <Router>
@@ -34,7 +34,7 @@ function AppRoutes() {
   return (
     <>
       {/* Only show NavBar on non-dashboard routes */}
-      {!location.pathname.startsWith("/dashboard") && <NavBar />}
+       {!location.pathname.startsWith("/dashboard") && <NavBar />}
 
       <Routes>
         <Route path="/" element={<MainPage />} />
@@ -69,7 +69,9 @@ function AppRoutes() {
             studentUser ? <Dashboard /> : <Navigate to="/stulogin" replace />
           }
         />
-      </Routes>
+        <Route path="/teacherlogin" element={<TeacherLogin />}></Route>
+        <Route path="/teachersignup" element={<TeacherSignup/>}></Route>
+      </Routes> 
     </>
   );
 }

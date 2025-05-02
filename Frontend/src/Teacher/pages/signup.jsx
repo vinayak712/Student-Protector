@@ -2,10 +2,9 @@ import { useState, useRef } from 'react';
 import { Link } from "react-router-dom";
 import { User, Mail, Lock, Eye, EyeOff, Loader, Upload, BookOpen, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import { studentAuthStore } from '../api/studentAuthStore';
 import toast from 'react-hot-toast';
 
-function StudSignup() {
+function TeacherSignup() {
     const [showP, setShowP] = useState(false);
     const fileInputRef = useRef(null);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -29,19 +28,10 @@ function StudSignup() {
     }
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setSelectedFile(file);
-            setFormdata({...formData, profile_pic: file});
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewUrl(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
+       
     };
     
-    const { isSignup, Signup } = studentAuthStore();
+ 
     
     function handleSubmit(e) {
         e.preventDefault();
@@ -61,7 +51,7 @@ function StudSignup() {
     }
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 relative px-4 py-12">
+        <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 relative px-4 py-12]">
             {/* Background decorative elements */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-0 right-1/4 w-64 h-64 bg-blue-500/20 rounded-full mix-blend-multiply filter blur-3xl"></div>
@@ -75,7 +65,7 @@ function StudSignup() {
                 transition={{ duration: 0.6 }}
                 className="w-full max-w-xl glass p-8 rounded-2xl shadow-2xl border border-slate-700/50 relative z-10"
             >
-                <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-xl shadow-lg">
+                <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-xl shadow-lg ]">
                     <User className="w-8 h-8 text-white" />
                 </div>
                 
@@ -162,7 +152,7 @@ function StudSignup() {
                             <div>
                                 <label className="text-sm font-medium text-gray-300 flex items-center gap-2 mb-2">
                                     <BookOpen className="w-4 h-4 text-blue-400" /> 
-                                    USN
+                                    SSN
                                 </label>
                                 <div className="relative">
                                     <input
@@ -204,10 +194,10 @@ function StudSignup() {
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            disabled={isSignup}
+                            disabled={''}
                             className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 transition-all flex items-center justify-center"
                         >
-                            {isSignup ? (
+                            {'' ? (
                                 <>
                                     <Loader className="w-5 h-5 animate-spin mr-2" />
                                     Creating account...
@@ -225,7 +215,7 @@ function StudSignup() {
                 <div className="mt-6 text-center">
                     <p className="text-gray-400">
                         Already have an account?{" "}
-                        <Link to="/stulogin">
+                        <Link to="/teacherlogin">
                             <span className="text-blue-400 hover:text-blue-300 font-medium hover:underline transition-colors">
                                 Sign in
                             </span>
@@ -237,4 +227,4 @@ function StudSignup() {
     );
 }
 
-export default StudSignup;
+export default TeacherSignup;
