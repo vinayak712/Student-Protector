@@ -1,23 +1,32 @@
-import Student from "../models/studentmodel.js";
+import Student from '../models/studentmodel.js';
 import { generateToken } from "../lib/utils.js";
 import bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
+import fs from 'fs';
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Configure multer storage
+// Configure multer storage for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../../uploads/"));
+    const uploadDir = path.join(__dirname, "../../uploads/files/");
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
+    cb(null, `${Date.now()}-${file.originalname.replace(/\s/g, '_')}`);
   },
 });
 
-export const upload = multer({ storage });
+export const upload = multer({ 
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+});
 
 async function Signup(req, res) {
   const { name, email, password, usn } = req.body;

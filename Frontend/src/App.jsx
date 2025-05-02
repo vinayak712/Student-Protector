@@ -13,10 +13,10 @@ import StudSignup from "./pages/StudSignup";
 import Profile from "./pages/profile";
 import About from "./pages/About";
 import NavBar from "./components/navBar";
+import GradesPage from "./pages/GradePage";
 import Dashboard from "./pages/dashboard";
 import { studentAuthStore } from "./api/studentAuthStore";
 import NavDash from "./components/navDash";
-
 
 function App() {
   return (
@@ -69,6 +69,12 @@ function AppRoutes() {
             studentUser ? <Dashboard /> : <Navigate to="/stulogin" replace />
           }
         />
+      <Route
+        path="/grades"
+        element={
+         <GradesPage />
+        }
+      />
       </Routes>
     </>
   );

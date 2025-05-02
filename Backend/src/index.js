@@ -4,6 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import authRouter from "./routes/Student.auth.route.js";
+import chartRouter from "./routes/chart.route.js"; // Add this line
 import ConnectDb from "./lib/DB.js";
 import multer from 'multer';
 import fs from 'fs';
@@ -14,7 +15,6 @@ const __dirname = path.resolve();
 app.use(express.json());
 app.use(cookieParser());
 const port = process.env.PORT || 7000;
-
 
 // Configure file uploads
 const storage = multer.diskStorage({
@@ -54,6 +54,7 @@ if (process.env.NODE_ENV === "production") {
 
 // Apply routes
 app.use("/api/auth", authRouter);
+app.use("/api/charts", chartRouter); // Add this line
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
