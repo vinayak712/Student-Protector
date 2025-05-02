@@ -17,7 +17,8 @@ import GradesPage from "./pages/GradePage";
 import Dashboard from "./pages/dashboard";
 import { studentAuthStore } from "./api/studentAuthStore";
 import NavDash from "./components/navDash";
-
+import TeacherSignup from "./Teacher/pages/signup";
+import Login from "./Teacher/Pages/login";
 
 function App() {
   return (
@@ -70,6 +71,8 @@ function AppRoutes() {
             studentUser ? <Dashboard /> : <Navigate to="/stulogin" replace />
           }
         />
+        <Route path="/teachersignup" element={<TeacherSignup />}></Route>
+        <Route path="/teacherlogin" element={<Login/>}></Route>
       </Routes>
     </>
   );
