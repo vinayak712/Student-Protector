@@ -20,6 +20,7 @@ import NavDash from "./components/navDash";
 import TeacherSignup from "./Teacher/pages/signup";
 import Login from "./Teacher/Pages/login";
 import Teacherdashboard from "./Teacher/component/dashboard";
+import { TeacherAuthStore } from "./api/teacherAuthStore";
 function App() {
   return (
     <Router>
@@ -32,12 +33,12 @@ function App() {
 function AppRoutes() {
   const { studentUser } = studentAuthStore();
   const location = useLocation();
-
+const { teacherUser}=TeacherAuthStore()
   return (
     <>
-    <Teacherdashboard/>
-      {/* Only show NavBar on non-dashboard routes
-       {!location.pathname.startsWith("/dashboard") && <NavBar />}
+   
+      {/* Only show NavBar on non-dashboard routes */}
+      {!location.pathname.startsWith("/dashboard") && !location.pathname.startsWith("/teacherDash") && <NavBar />}
 
       <Routes>
         <Route path="/" element={<MainPage />} />
@@ -72,9 +73,11 @@ function AppRoutes() {
             studentUser ? <Dashboard /> : <Navigate to="/stulogin" replace />
           }
         />
-        <Route path="/teachersignup" element={<TeacherSignup />}></Route>
-        <Route path="/teacherlogin" element={<Login/>}></Route>
-      </Routes> */}
+        <Route path="/teachersignup" element={ teacherUser? <Navigate to='/teacherDash'/> : <TeacherSignup />}></Route>
+        <Route path="/teacherlogin" element={ teacherUser?<Navigate to='/teacherDash'/>:<Login />}></Route>
+        <Route path="/teacherDash" element={teacherUser ? <Teacherdashboard /> : <Navigate to='/teacherlogin' />}></Route>
+       
+      </Routes>
     </>
   );
 }
