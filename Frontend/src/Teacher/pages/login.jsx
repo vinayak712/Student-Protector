@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { User, Mail, Lock, Eye, EyeOff, Loader } from "lucide-react";
 import { motion } from "framer-motion";
-
+import { TeacherAuthStore } from "../../api/teacherAuthStore";
 
 function Login() {
   const [showP, setShowP] = useState(false);
@@ -11,11 +11,11 @@ function Login() {
     email: "",
     password: "",
   });
-
   function handleSubmit(e) {
     e.preventDefault();
     Login(formData);
   }
+  const { Login, isLogin } = TeacherAuthStore();
 
 
   return (
@@ -111,7 +111,7 @@ function Login() {
               disabled={''}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 transition-all flex items-center justify-center"
             >
-              {'' ? (
+              {isLogin ? (
                 <>
                   <Loader className="w-5 h-5 animate-spin mr-2" />
                   Logging in...
