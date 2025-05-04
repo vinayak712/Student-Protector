@@ -25,7 +25,24 @@ const FileSchema = new mongoose.Schema({
   student: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Student',
-    required: true
+    required: false // Changed to false to make it optional
+  },
+  // New fields for shared documents
+  isShared: {
+    type: Boolean,
+    default: false
+  },
+  uploaderName: {
+    type: String,
+    default: "Anonymous"
+  },
+  description: {
+    type: String,
+    default: ""
+  },
+  uploadDate: {
+    type: Date,
+    default: Date.now
   }
 }, { timestamps: true });
 
