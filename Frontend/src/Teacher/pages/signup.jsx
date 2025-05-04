@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { User, Mail, Lock, Eye, EyeOff, Loader, Upload, BookOpen, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from 'react-hot-toast';
-
+import { TeacherAuthStore } from '../../api/teacherAuthStore';
 function TeacherSignup() {
     const [showP, setShowP] = useState(false);
     const fileInputRef = useRef(null);
@@ -13,7 +13,7 @@ function TeacherSignup() {
         name: "",
         email: "",
         password: "",
-        usn: "",
+        ssn: "",
         profile_pic: null
     });
 
@@ -21,17 +21,25 @@ function TeacherSignup() {
         if (!formData.email.trim()) return toast.error("Email is required");
         if (formData.password.length < 6) return toast.error("Password length must be greater than 6");
         if (!formData.name.trim()) return toast.error("Name is required");
-        if (!formData.usn.trim()) return toast.error("USN is required");
+        if (!formData.ssn.trim()) return toast.error("SSN is required");
         if (!/\S+@\S+\.\S+/.test(formData.email))
             return toast.error("Enter a valid email"); 
         return true;
     }
-
     const handleFileChange = (e) => {
-       
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            setFormdata({...formData, profile_pic: file});
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewUrl(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
     };
-    
- 
+
+     const { isSignup, Signup } = TeacherAuthStore();
     
     function handleSubmit(e) {
         e.preventDefault();
@@ -41,7 +49,7 @@ function TeacherSignup() {
             formDataToSend.append('name', formData.name);
             formDataToSend.append('email', formData.email);
             formDataToSend.append('password', formData.password);
-            formDataToSend.append('usn', formData.usn);
+            formDataToSend.append('ssn', formData.ssn);
             if (selectedFile) {
                 formDataToSend.append('profile_pic', selectedFile);
             }
@@ -158,9 +166,9 @@ function TeacherSignup() {
                                     <input
                                         type="text"
                                         className="w-full bg-slate-800/50 border border-slate-700 rounded-lg py-3 px-4 pl-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                        placeholder="Enter your USN"
-                                        value={formData.usn} 
-                                        onChange={(e) => {setFormdata({...formData, usn: e.target.value})}}
+                                        placeholder="Enter your ssn"
+                                        value={formData.ssn} 
+                                        onChange={(e) => {setFormdata({...formData, ssn: e.target.value})}}
                                     />
                                     <BookOpen className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                                 </div>
@@ -194,10 +202,10 @@ function TeacherSignup() {
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            disabled={''}
+                            disabled={isSignup}
                             className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 transition-all flex items-center justify-center"
                         >
-                            {'' ? (
+                            {isSignup ? (
                                 <>
                                     <Loader className="w-5 h-5 animate-spin mr-2" />
                                     Creating account...

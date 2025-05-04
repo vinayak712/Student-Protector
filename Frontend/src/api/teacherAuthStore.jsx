@@ -1,25 +1,23 @@
-import { create } from "zustand";
-import { axiosInstance } from "../lib/axios.jsx";
-import { toast } from "react-hot-toast";
+import { create } from 'zustand'
+import { axiosInstance } from '../lib/axios'
+import { toast } from 'react-hot-toast'
 
-export const teacherAuthStore = create((set) => ({
+export const TeacherAuthStore = create((set) => ({
     isLogin: false,
     isSignup: false,
-    isChecking: false,
-    teacherUser: JSON.parse(localStorage.getItem("teacherUser")) || null,
+    teacherUser: null,
     teacherInfo: null,
-    
+    isChecking: false,
     checkAuth: async () => {
-        set({ isChecking: true });
+        set({ isChecking: true })
         try {
-            const res = await axiosInstance.get("/teacher/check");
-            localStorage.setItem("teacherUser", JSON.stringify(res.data));
-            set({ teacherUser: res.data });
+            const res = await axiosInstance.get('/tchauth/tchcheck');
+            set({ teacherUser: res.data })
         } catch (error) {
-            console.error("Error while checking teacher authentication:", error);
-            localStorage.removeItem("teacherUser");
-            set({ teacherUser: null });
-        } finally {
+            console.error("Error while checking authentication:", error);
+            set({ teacherUser: null })
+        }
+        finally {
             set({ isChecking: false });
         }
     },
@@ -32,13 +30,13 @@ export const teacherAuthStore = create((set) => ({
                     "Content-Type": "multipart/form-data",
                 },
             };
-            const res = await axiosInstance.post("/teacher/signup", data, config);
-            localStorage.setItem("teacherUser", JSON.stringify(res.data));
+            const res = await axiosInstance.post('/tchauth/tchsignup',data,config);
             set({ teacherUser: res.data });
-            toast.success("Teacher Signup Successfully 🎉");
+            toast.success("Signup Successfully 🎉");
         } catch (error) {
-            toast.error(error?.response?.data?.Message || "Something went wrong during teacher signup.");
-        } finally {
+            toast.error(error?.response?.data?.Message || "Something went wrong during Signup.");
+        }
+        finally {
             set({ isSignup: false });
         }
     },
@@ -46,12 +44,11 @@ export const teacherAuthStore = create((set) => ({
     Login: async (data) => {
         set({ isLogin: true });
         try {
-            const res = await axiosInstance.post("/teacher/login", data);
-            localStorage.setItem("teacherUser", JSON.stringify(res.data));
+            const res =  await axiosInstance.post('/tchauth/tchlogin',data)
             set({ teacherUser: res.data });
-            toast.success("Teacher Login Successfully 🎉");
+            toast.success("Login Successfully 🎉");
         } catch (error) {
-            toast.error(error?.response?.data?.Message || "Something went wrong during teacher login.");
+            toast.error(error?.response?.data?.Message || "Something went wrong during login.");
         } finally {
             set({ isLogin: false });
         }
@@ -59,26 +56,22 @@ export const teacherAuthStore = create((set) => ({
 
     Logout: async () => {
         try {
-            await axiosInstance.post("/teacher/logout");
-            localStorage.removeItem("teacherUser");
-            set({ teacherUser: null, teacherInfo: null });
-            toast.success("Teacher Logout Successfully 🎉");
+            await axiosInstance.post('/tchauth/tchlogout');
+            set({ teacherUser: null, teacherInfo: null })
         } catch (error) {
-            toast.error(error?.response?.data?.Message || "Something went wrong during teacher logout.");
+            toast.error(error?.response?.data?.Message || "Something went wrong during logout.");
         }
     },
 
     fetchTeacherInfo: async () => {
         try {
-            console.log("Fetching teacher info..."); // Debugging
-            const res = await axiosInstance.get("/teacher/tchinfo");
-            console.log("Teacher info response:", res.data); // Debugging
-            set({ teacherInfo: res.data });
-            return res.data;
+            console.log('Fetching teacher Data');
+            const res = await axiosInstance.get('/tchauth/tchinfo')
+            console.log("Teacher info response:", res.data);
+            set({ teacherUser: res.data });
         } catch (error) {
-            console.error("Error fetching teacher info:", error.response?.data || error.message);
-            // Don't show toast here since this might be called on initial page load
-            return null;
+            console.error("Error fetching student info:", error.response?.data || error.message);
+            toast.error("Failed to fetch student information.");
         }
-    },
+    }
 }));

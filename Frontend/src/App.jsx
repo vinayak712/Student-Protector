@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { studentAuthStore } from "./api/studentAuthStore";
+
 import { teacherAuthStore } from "./api/teacherAuthStore";
 import MainPage from './pages/mainPage';
 import StudLogin from './pages/StudLogin';
@@ -15,6 +16,17 @@ import GradesPage from './pages/GradePage';
 import AnnouncementPage from './pages/AnnouncementPage';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import NavDash from "./components/navDash";
+import Teacherdashboard from "./Teacher/component/dashboard";
+import { TeacherAuthStore } from "./api/teacherAuthStore";
+function App() {
+  return (
+    <Router>
+      <AppRoutes />
+      <Toaster />
+    </Router>
+  );
+}
 
 function AppRoutes() {
   const location = useLocation();
@@ -34,6 +46,12 @@ function AppRoutes() {
     <>
       {!location.pathname.startsWith("/dashboard") && <NavBar />}
       <Toaster position="top-center" />
+const { teacherUser}=TeacherAuthStore()
+  return (
+    <>
+   
+      {/* Only show NavBar on non-dashboard routes */}
+      {!location.pathname.startsWith("/dashboard") && !location.pathname.startsWith("/teacherDash") && <NavBar />}
 
       <Routes>
         <Route path="/" element={<MainPage />} />
@@ -84,6 +102,9 @@ function AppRoutes() {
         
         {/* Public routes */}
         <Route path="/stuabout" element={<About />} />
+        <Route path="/teachersignup" element={ teacherUser? <Navigate to='/teacherDash'/> : <TeacherSignup />}></Route>
+        <Route path="/teacherlogin" element={ teacherUser?<Navigate to='/teacherDash'/>:<Login />}></Route>
+        <Route path="/teacherDash" element={teacherUser ? <Teacherdashboard /> : <Navigate to='/teacherlogin' />}></Route>
       </Routes>
     </>
   );
