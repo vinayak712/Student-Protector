@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Student from './studentmodel.js';
 
 const FileSchema = new mongoose.Schema({
   filename: {
@@ -92,4 +93,4 @@ const Message = mongoose.model('Message', MessageSchema);
 const Grade = mongoose.model('Grade', GradeSchema);
 const Attendance = mongoose.model('Attendance', AttendanceSchema);
 
-export { File, Message, Grade, Attendance };
+export {Student, File, Message, Grade, Attendance, };

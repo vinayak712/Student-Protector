@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import Teacher from "../models/teacherModel.js";
 async function  TProtect(req, res, next) {
   try {
-    const token = req.cookie.jwt;
+    const token = req.cookies.jwt;
     if (!token) {
         return res.status(400).json({Message:'Unauthorized - No Token Provided for teacher'})
     }

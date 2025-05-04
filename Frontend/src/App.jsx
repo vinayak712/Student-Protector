@@ -1,51 +1,44 @@
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  useLocation,
-  Navigate,
-} from "react-router-dom";
-import { Toaster } from "react-hot-toast";
-import MainPage from "./pages/mainPage";
-import Hero from "./pages/Hero";
-import StudLogin from "./pages/StudLogin";
-import StudSignup from "./pages/StudSignup";
-import Profile from "./pages/profile";
-import About from "./pages/About";
-import NavBar from "./components/navBar";
-import GradesPage from "./pages/GradePage";
-import Dashboard from "./pages/dashboard";
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { studentAuthStore } from "./api/studentAuthStore";
-import NavDash from "./components/navDash";
-import TeacherSignup from "./Teacher/pages/signup";
-import Login from "./Teacher/Pages/login";
-
-function App() {
-  return (
-    <Router>
-      <AppRoutes />
-      <Toaster />
-    </Router>
-  );
-}
+import { teacherAuthStore } from "./api/teacherAuthStore";
+import MainPage from './pages/mainPage';
+import StudLogin from './pages/StudLogin';
+import StudSignup from './pages/StudSignup';
+import Dashboard from './pages/dashboard';
+import Profile from './pages/profile';
+import About from './pages/About';
+import TeacherSignup from './Teacher/pages/signup';
+import TeacherLogin from './Teacher/pages/Login';
+import NavBar from './components/navBar';
+import GradesPage from './pages/GradePage';
+import AnnouncementPage from './pages/AnnouncementPage';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 function AppRoutes() {
-  const { studentUser } = studentAuthStore();
   const location = useLocation();
+  const { studentUser, fetchStudentInfo } = studentAuthStore();
+  const { teacherUser, fetchTeacherInfo } = teacherAuthStore();
+
+  useEffect(() => {
+    fetchStudentInfo();
+    fetchTeacherInfo();
+  }, [fetchStudentInfo, fetchTeacherInfo]);
+
+  // Determine if user is authenticated and their role
+  const isAuthenticated = studentUser || teacherUser;
+  const isTeacher = teacherUser ? true : false;
 
   return (
     <>
-      {/* Only show NavBar on non-dashboard routes */}
-       {!location.pathname.startsWith("/dashboard") && <NavBar />}
+      {!location.pathname.startsWith("/dashboard") && <NavBar />}
+      <Toaster position="top-center" />
 
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route
-          path="/login"
-          element={
-            studentUser ? <Navigate to="/dashboard" replace /> : <Hero />
-          }
-        />
+        
+        {/* Student routes */}
         <Route
           path="/stulogin"
           element={
@@ -64,17 +57,43 @@ function AppRoutes() {
             studentUser ? <Profile /> : <Navigate to="/stulogin" replace />
           }
         />
-        <Route path="/stuabout" element={<About />} />
+        
+        {/* Teacher routes */}
+        <Route path="/teachersignup" element={<TeacherSignup />} />
+        <Route path="/teacherlogin" element={<TeacherLogin />} />
+        
+        {/* Protected routes for any authenticated user */}
         <Route
           path="/dashboard"
           element={
-            studentUser ? <Dashboard /> : <Navigate to="/stulogin" replace />
+            isAuthenticated ? <Dashboard /> : <Navigate to="/stulogin" replace />
           }
         />
-        <Route path="/teachersignup" element={<TeacherSignup />}></Route>
-        <Route path="/teacherlogin" element={<Login/>}></Route>
+        <Route 
+          path="/announcements" 
+          element={
+            isAuthenticated ? <AnnouncementPage /> : <Navigate to="/stulogin" replace />
+          }
+        />
+        <Route 
+          path="/grades" 
+          element={
+            isAuthenticated ? <GradesPage /> : <Navigate to="/stulogin" replace />
+          }
+        />
+        
+        {/* Public routes */}
+        <Route path="/stuabout" element={<About />} />
       </Routes>
     </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppRoutes />
+    </Router>
   );
 }
 
