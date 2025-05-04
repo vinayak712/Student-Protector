@@ -130,7 +130,7 @@ async function Logout(req, res) {
 }
 async function Studinfo(req, res) {
   try {
-    //console.log("Student ID from token:", req.user._id); // Debugging
+    console.log("Student ID from token:", req.user._id); // Debugging
     const studentId = req.user._id;
 
     const student = await Student.findById(studentId).select(
@@ -140,7 +140,7 @@ async function Studinfo(req, res) {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    console.log("Student data fetched:", student); // Debugging
+    // console.log("Student data fetched:", student); // Debugging
     res.status(200).json({
       _id: student._id,
       name: student.name,

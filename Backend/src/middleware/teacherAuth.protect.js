@@ -3,6 +3,7 @@ import Teacher from "../models/teacherModel.js";
 async function  TProtect(req, res, next) {
   try {
     const token = req.cookies.jwt;
+    console.log("Token from cookies:", token);
     if (!token) {
         return res.status(400).json({Message:'Unauthorized - No Token Provided for teacher'})
     }

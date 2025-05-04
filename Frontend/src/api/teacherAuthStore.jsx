@@ -71,7 +71,7 @@ export const TeacherAuthStore = create((set) => ({
             set({ teacherInfo: res.data });
         } catch (error) {
             console.error("Error fetching Teacher  info:", error.response?.data || error.message);
-            toast.error("Failed to fetch student information.");
+            toast.error("Failed to fetch Teacher information.");
         }
     }
 }));

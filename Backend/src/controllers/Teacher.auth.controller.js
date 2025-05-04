@@ -125,7 +125,7 @@ async function Logout(req,res) {
 async function TeacherInfo(req,res) {
     try {
         const teacherId = req.user._id;
-        const teacher = await Teacher.findOne(teacherId).select('-password -__v -createdAt -updatedAt');
+        const teacher = await Teacher.findById(teacherId).select('-password -__v -createdAt -updatedAt');
         if (!teacher) {
             return res.status(400).json({Message:'Teacher NOt Found'})
         }
