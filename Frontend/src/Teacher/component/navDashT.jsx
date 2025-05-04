@@ -17,12 +17,14 @@ import {
     Users,
     File,
 } from "lucide-react";
-
+import { TeacherAuthStore } from "../../api/teacherAuthStore";
 function NavDash() {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { Logout } = TeacherAuthStore();
   const toggleSidebar = () => setIsOpen(!isOpen);
-
+  function handle() {
+    Logout();
+  }
   return (
     <nav
       className={`h-screen ${
@@ -49,13 +51,13 @@ function NavDash() {
         <ul className="flex flex-col gap-3">
           <li>
         
-            <Link to='/stuProfile' className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300">
+            <Link to='/TProfile' className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300">
             <img src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop' alt="Logo" className="w-12 h-12 rounded-full" />
               {isOpen && <span>Profile</span>}</Link>
           </li>
           <li>
             <Link
-              to="/dashboard"
+              to="/teacherDash"
               className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
             >
               <Home />
@@ -104,14 +106,14 @@ function NavDash() {
       {/* Settings & Logout */}
       <div className="flex flex-col gap-3">
         <Link
-          to="/settings"
+          to="/Tproflie"
           className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
         >
           <Settings />
           {isOpen && <span>Settings</span>}
         </Link>
         <button
-          onClick={() => console.log("Logout")}
+          onClick={handle}
           className="text-red-600 text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
         >
           <LogOut />

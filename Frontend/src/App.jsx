@@ -17,7 +17,8 @@ import GradesPage from './pages/GradePage';
 import AnnouncementPage from './pages/AnnouncementPage';
 import Teacherdashboard from "./Teacher/component/dashboard";
 import Hero from './pages/Hero';
-
+import TeacherProfile from './Teacher/pages/TProfile'
+  import StudentCourses from './pages/courses';
 function App() {
   return (
     <Router>
@@ -90,6 +91,11 @@ function AppRoutes() {
           path="/grades"
           element={isAuthenticated ? <GradesPage /> : <Navigate to="/stulogin" replace />}
         />
+          <Route
+          path="/Tprofile"
+          element={isAuthenticated ? <TeacherProfile/> : <Navigate to="/teacherlogin" replace />}
+        />
+        <Route path='/courses' element={<StudentCourses/>}></Route>
       </Routes>
     </>
   );
