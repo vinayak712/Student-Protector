@@ -140,7 +140,7 @@ async function Studinfo(req, res) {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    //console.log("Student data fetched:", student); // Debugging
+    console.log("Student data fetched:", student); // Debugging
     res.status(200).json({
       _id: student._id,
       name: student.name,

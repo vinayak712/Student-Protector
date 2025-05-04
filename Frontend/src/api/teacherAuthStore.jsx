@@ -11,7 +11,7 @@ export const TeacherAuthStore = create((set) => ({
     checkAuth: async () => {
         set({ isChecking: true })
         try {
-            const res = await axiosInstance.get('/tchauth/tchcheck');
+            const res = await axiosInstance.get('/teacher/tchcheck');
             set({ teacherUser: res.data })
         } catch (error) {
             console.error("Error while checking authentication:", error);
@@ -30,7 +30,7 @@ export const TeacherAuthStore = create((set) => ({
                     "Content-Type": "multipart/form-data",
                 },
             };
-            const res = await axiosInstance.post('/tchauth/tchsignup',data,config);
+            const res = await axiosInstance.post('/teacher/tchsignup',data,config);
             set({ teacherUser: res.data });
             toast.success("Signup Successfully 🎉");
         } catch (error) {
@@ -44,7 +44,7 @@ export const TeacherAuthStore = create((set) => ({
     Login: async (data) => {
         set({ isLogin: true });
         try {
-            const res =  await axiosInstance.post('/tchauth/tchlogin',data)
+            const res =  await axiosInstance.post('/teacher/tchlogin',data)
             set({ teacherUser: res.data });
             toast.success("Login Successfully 🎉");
         } catch (error) {
@@ -56,7 +56,7 @@ export const TeacherAuthStore = create((set) => ({
 
     Logout: async () => {
         try {
-            await axiosInstance.post('/tchauth/tchlogout');
+            await axiosInstance.post('/teacher/tchlogout');
             set({ teacherUser: null, teacherInfo: null })
         } catch (error) {
             toast.error(error?.response?.data?.Message || "Something went wrong during logout.");
@@ -66,11 +66,11 @@ export const TeacherAuthStore = create((set) => ({
     fetchTeacherInfo: async () => {
         try {
             console.log('Fetching teacher Data');
-            const res = await axiosInstance.get('/tchauth/tchinfo')
+            const res = await axiosInstance.get('/teacher/tchinfo')
             console.log("Teacher info response:", res.data);
-            set({ teacherUser: res.data });
+            set({ teacherInfo: res.data });
         } catch (error) {
-            console.error("Error fetching student info:", error.response?.data || error.message);
+            console.error("Error fetching Teacher  info:", error.response?.data || error.message);
             toast.error("Failed to fetch student information.");
         }
     }

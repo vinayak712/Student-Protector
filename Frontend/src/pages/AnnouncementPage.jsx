@@ -6,7 +6,7 @@ import {
   ThumbsUp, MessageCircle, Filter, MessageSquare
 } from "lucide-react";
 import { studentAuthStore } from "../api/studentAuthStore";
-import { teacherAuthStore } from "../api/teacherAuthStore";
+import { TeacherAuthStore } from "../api/teacherAuthStore";
 import { axiosInstance } from "../lib/axios";
 import NavDash from "../components/navDash";
 import toast from "react-hot-toast";
@@ -23,7 +23,7 @@ function AnnouncementPage() {
   const fileInputRef = useRef(null);
   
   const { studentInfo, studentUser } = studentAuthStore();
-  const { teacherInfo, teacherUser } = teacherAuthStore();
+  const { teacherInfo, teacherUser } = TeacherAuthStore();
   
   // Determine current user and role
   const currentUser = teacherUser || studentUser;

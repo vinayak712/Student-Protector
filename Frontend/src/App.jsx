@@ -1,8 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
 import { studentAuthStore } from "./api/studentAuthStore";
+import { TeacherAuthStore } from "./api/teacherAuthStore";
 
-import { teacherAuthStore } from "./api/teacherAuthStore";
 import MainPage from './pages/mainPage';
 import StudLogin from './pages/StudLogin';
 import StudSignup from './pages/StudSignup';
@@ -14,16 +15,13 @@ import TeacherLogin from './Teacher/pages/Login';
 import NavBar from './components/navBar';
 import GradesPage from './pages/GradePage';
 import AnnouncementPage from './pages/AnnouncementPage';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import NavDash from "./components/navDash";
 import Teacherdashboard from "./Teacher/component/dashboard";
-import { TeacherAuthStore } from "./api/teacherAuthStore";
+import Hero from './pages/Hero';
 function App() {
   return (
     <Router>
       <AppRoutes />
-      <Toaster />
+      <Toaster position="top-center" />
     </Router>
   );
 }
@@ -31,31 +29,27 @@ function App() {
 function AppRoutes() {
   const location = useLocation();
   const { studentUser, fetchStudentInfo } = studentAuthStore();
-  const { teacherUser, fetchTeacherInfo } = teacherAuthStore();
+  const { teacherUser, fetchTeacherInfo } = TeacherAuthStore();
 
   useEffect(() => {
     fetchStudentInfo();
     fetchTeacherInfo();
   }, [fetchStudentInfo, fetchTeacherInfo]);
 
-  // Determine if user is authenticated and their role
   const isAuthenticated = studentUser || teacherUser;
-  const isTeacher = teacherUser ? true : false;
+
+  const ProtectedRoute = ({ isAuthenticated, redirectPath, children }) => {
+    return isAuthenticated ? children : <Navigate to={redirectPath} replace />;
+  };
 
   return (
     <>
-      {!location.pathname.startsWith("/dashboard") && <NavBar />}
-      <Toaster position="top-center" />
-const { teacherUser}=TeacherAuthStore()
-  return (
-    <>
-   
-      {/* Only show NavBar on non-dashboard routes */}
+      {/* Show NavBar only on non-dashboard routes */}
       {!location.pathname.startsWith("/dashboard") && !location.pathname.startsWith("/teacherDash") && <NavBar />}
 
       <Routes>
         <Route path="/" element={<MainPage />} />
-        
+<Route path='/login' element={<Hero/>}></Route>
         {/* Student routes */}
         <Route
           path="/stulogin"
@@ -75,46 +69,57 @@ const { teacherUser}=TeacherAuthStore()
             studentUser ? <Profile /> : <Navigate to="/stulogin" replace />
           }
         />
-        
+        <Route path="/stuabout" element={<About />} />
+
         {/* Teacher routes */}
-        <Route path="/teachersignup" element={<TeacherSignup />} />
-        <Route path="/teacherlogin" element={<TeacherLogin />} />
-        
-        {/* Protected routes for any authenticated user */}
+        <Route
+          path="/teachersignup"
+          element={
+            teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherSignup />
+          }
+        />
+        <Route
+          path="/teacherlogin"
+          element={
+            teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherLogin />
+          }
+        />
+        <Route
+          path="/teacherDash"
+          element={
+            <ProtectedRoute isAuthenticated={teacherUser} redirectPath="/teacherlogin">
+              <Teacherdashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected routes */}
         <Route
           path="/dashboard"
           element={
-            isAuthenticated ? <Dashboard /> : <Navigate to="/stulogin" replace />
+            <ProtectedRoute isAuthenticated={isAuthenticated} redirectPath="/stulogin">
+              <Dashboard />
+            </ProtectedRoute>
           }
         />
-        <Route 
-          path="/announcements" 
+        <Route
+          path="/announcements"
           element={
-            isAuthenticated ? <AnnouncementPage /> : <Navigate to="/stulogin" replace />
+            <ProtectedRoute isAuthenticated={isAuthenticated} redirectPath="/stulogin">
+              <AnnouncementPage />
+            </ProtectedRoute>
           }
         />
-        <Route 
-          path="/grades" 
+        <Route
+          path="/grades"
           element={
-            isAuthenticated ? <GradesPage /> : <Navigate to="/stulogin" replace />
+            <ProtectedRoute isAuthenticated={isAuthenticated} redirectPath="/stulogin">
+              <GradesPage />
+            </ProtectedRoute>
           }
         />
-        
-        {/* Public routes */}
-        <Route path="/stuabout" element={<About />} />
-        <Route path="/teachersignup" element={ teacherUser? <Navigate to='/teacherDash'/> : <TeacherSignup />}></Route>
-        <Route path="/teacherlogin" element={ teacherUser?<Navigate to='/teacherDash'/>:<Login />}></Route>
-        <Route path="/teacherDash" element={teacherUser ? <Teacherdashboard /> : <Navigate to='/teacherlogin' />}></Route>
       </Routes>
     </>
-  );
-}
-
-function App() {
-  return (
-    <Router>
-      <AppRoutes />
-    </Router>
   );
 }
 

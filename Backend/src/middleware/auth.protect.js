@@ -1,54 +1,24 @@
 import jwt from "jsonwebtoken";
-import Student from '../models/studentmodel.js'
-import Teacher from "../models/teacherModel.js";
-
-const Protect = async (req, res, next) => {
+import Student from'../models/studentmodel.js'
+async function  Protect(req, res, next) {
   try {
     const token = req.cookies.jwt;
-    
     if (!token) {
-      return res.status(401).json({ message: "Not authorized, no token" });
+        return res.status(400).json({Message:'Unauthorized - No Token Provided for student'})
     }
-
-    try {
-      // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      
-      // Set userModel based on prefix in userId
-      const userId = decoded.userId;
-      
-      // Check if it's a teacher (teachers have a 'T-' prefix in JWT)
-      if (userId.toString().startsWith('T-')) {
-        const teacherId = userId.slice(2); // Remove 'T-' prefix
-        const teacher = await Teacher.findById(teacherId).select("-password");
-        
-        if (!teacher) {
-          return res.status(401).json({ message: "Teacher not found" });
-        }
-        
-        req.user = teacher;
-        req.user.role = 'teacher';
-      } else {
-        // It's a student
-        const student = await Student.findById(userId).select("-password");
-        
-        if (!student) {
-          return res.status(401).json({ message: "Student not found" });
-        }
-        
-        req.user = student;
-        req.user.role = 'student';
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decode) {
+        return res.status(400).json({Message:'Unauthorized - Invalid Token For student'})
+    }
+    const student = await Student.findById(decode.studentId).select('-password');
+    if (!student) {
+        return res.status(400).json({Message:'Student not Found'})
       }
-
+      req.user = student;
       next();
-    } catch (error) {
-      console.error("Token verification error:", error);
-      res.status(401).json({ message: "Not authorized, token failed" });
-    }
   } catch (error) {
-    console.error("Auth middleware error:", error);
-    res.status(500).json({ message: "Server error in authentication" });
+    console.error(" Middleware error:", error.message);
+    res.status(500).json({ Message: 'Internal Server Error: ' + error.message });
   }
-};
-
+}
 export default Protect;
