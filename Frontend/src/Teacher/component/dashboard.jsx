@@ -1,4 +1,4 @@
-// src/components/Teacherdashboard.jsx
+
 import React, { useEffect } from 'react';
 import {
   Users,
@@ -10,21 +10,21 @@ import {
   Send,
   ChevronDown
 } from 'lucide-react';
-import NavDash from './navDashT';
+import NavDashT from './navDashT';
 import { TeacherAuthStore } from '../../api/teacherAuthStore';
 import { Link } from 'react-router-dom';
 
 
 function Teacherdashboard() {
-  // Pull state and action from Zustand store
+
   const { teacherInfo, fetchTeacherInfo } = TeacherAuthStore();
 
-  // Fetch teacher info once when the component mounts
+  
   useEffect(() => {
     fetchTeacherInfo();
   }, [fetchTeacherInfo]);
 
-  // Simple loading guard
+
   if (!teacherInfo || !teacherInfo.name) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-950 text-white">
@@ -59,7 +59,7 @@ function Teacherdashboard() {
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-slate-900 to-slate-950 text-white overflow-x-hidden">
-      <NavDash />
+      <NavDashT />
 
       <main className="ml-64 p-8">
         {/* Header */}

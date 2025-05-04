@@ -18,7 +18,7 @@ import {
     File,
 } from "lucide-react";
 import { TeacherAuthStore } from "../../api/teacherAuthStore";
-function NavDash() {
+function NavDashT() {
   const [isOpen, setIsOpen] = useState(false);
   const { Logout } = TeacherAuthStore();
   const toggleSidebar = () => setIsOpen(!isOpen);
@@ -66,7 +66,7 @@ function NavDash() {
           </li>
           <li>
             <Link
-              to="/courses"
+              to="/teacherDash"
               className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
             >
           <Users/>
@@ -75,16 +75,16 @@ function NavDash() {
           </li>
           <li>
             <Link
-              to="/chats"
+              to="/anouc"
               className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
             >
               <User />
-              {isOpen && <span>Chats</span>}
+              {isOpen && <span>Annoucements</span>}
             </Link>
           </li>
           <li>
             <Link
-              to="/schedule"
+              to="/teacherDash"
               className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
             >
               <Calendar />
@@ -93,7 +93,7 @@ function NavDash() {
           </li>
           <li>
             <Link
-              to="/grades"
+              to="/doc"
               className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
             >
               <File/>
@@ -124,4 +124,4 @@ function NavDash() {
   );
 }
 
-export default NavDash;
+export default NavDashT;

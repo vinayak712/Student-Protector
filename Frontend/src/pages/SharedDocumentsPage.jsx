@@ -10,7 +10,7 @@ import {
   Search,
   Filter,
 } from "lucide-react";
-import NavDash from "../components/navDash";
+import NavDashT from "../Teacher/component/navDashT";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
@@ -174,7 +174,7 @@ const handleDownload = async (docItem) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-950 text-white">
-      <NavDash />
+      <NavDashT />
 
       <div className="ml-24 md:ml-64 p-6 pt-8">
         <div className="max-w-7xl mx-auto">

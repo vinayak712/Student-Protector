@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
+
 import { studentAuthStore } from "./api/studentAuthStore";
 import { TeacherAuthStore } from "./api/teacherAuthStore";
 
@@ -17,6 +18,9 @@ import GradesPage from './pages/GradePage';
 import AnnouncementPage from './pages/AnnouncementPage';
 import Teacherdashboard from "./Teacher/component/dashboard";
 import Hero from './pages/Hero';
+import TeacherProfile from './Teacher/pages/TProfile';
+import StudentCourses from './pages/courses';
+import SharedDocumentsPage from './pages/SharedDocumentsPage';
 
 function App() {
   return (
@@ -37,58 +41,82 @@ function AppRoutes() {
     fetchTeacherInfo();
   }, []);
 
-  const isAuthenticated = studentUser || teacherUser;
+  const isSidebarRoute = (path) => {
+    const sidebarRoutes = [
+      "/dashboard",
+      "/courses",
+      "/grades",
+      "/Tprofile",
+      "/anouc",
+      "/doc",
+      "/teacherDash"
+    ];
+    return sidebarRoutes.some(route => path.startsWith(path));
+  };
 
   return (
     <>
-      {/* Show NavBar only on non-dashboard routes */}
-      {!location.pathname.startsWith("/dashboard") && !location.pathname.startsWith("/teacherDash") && <NavBar />}
+      {/* Conditionally render NavBar */}
+      {!isSidebarRoute(location.pathname) && <NavBar />}
 
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<Hero />} />
 
-        {/* Student Routes */}
+        {/* Student Auth Routes */}
         <Route
           path="/stulogin"
-          element={studentUser ? <Navigate to="/dashboard" replace /> : <StudLogin />}
+          element={studentAuthStore.getState().studentUser ? <Navigate to="/dashboard" replace /> : <StudLogin />}
         />
         <Route
           path="/stusignup"
-          element={studentUser ? <Navigate to="/dashboard" replace /> : <StudSignup />}
+          element={studentAuthStore.getState().studentUser ? <Navigate to="/dashboard" replace /> : <StudSignup />}
         />
         <Route
           path="/stuProfile"
-          element={studentUser ? <Profile /> : <Navigate to="/stulogin" replace />}
+          element={studentAuthStore.getState().studentUser ? <Profile /> : <Navigate to="/stulogin" replace />}
         />
         <Route path="/stuabout" element={<About />} />
 
-        {/* Teacher Routes */}
+        {/* Teacher Auth Routes */}
         <Route
           path="/teachersignup"
-          element={teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherSignup />}
+          element={TeacherAuthStore.getState().teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherSignup />}
         />
         <Route
           path="/teacherlogin"
-          element={teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherLogin />}
+          element={TeacherAuthStore.getState().teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherLogin />}
         />
         <Route
           path="/teacherDash"
-          element={teacherUser ? <Teacherdashboard /> : <Navigate to="/teacherlogin" replace />}
+          element={TeacherAuthStore.getState().teacherUser ? <Teacherdashboard /> : <Navigate to="/teacherlogin" replace />}
         />
 
-        {/* Shared Authenticated Routes */}
+        {/* Authenticated Routes */}
         <Route
           path="/dashboard"
-          element={isAuthenticated ? <Dashboard /> : <Navigate to="/stulogin" replace />}
-        />
-        <Route
-          path="/announcements"
-          element={isAuthenticated ? <AnnouncementPage /> : <Navigate to="/stulogin" replace />}
+          element={studentAuthStore.getState().studentUser ? <Dashboard /> : <Navigate to="/stulogin" replace />}
         />
         <Route
           path="/grades"
-          element={isAuthenticated ? <GradesPage /> : <Navigate to="/stulogin" replace />}
+          element={studentAuthStore.getState().studentUser ? <GradesPage /> : <Navigate to="/stulogin" replace />}
+        />
+        <Route
+          path="/Tprofile"
+          element={TeacherAuthStore.getState().teacherUser ? <TeacherProfile /> : <Navigate to="/teacherlogin" replace />}
+        />
+        <Route
+          path="/courses"
+          element={studentAuthStore.getState().studentUser ? <StudentCourses /> : <Navigate to="/stulogin" replace />}
+        />
+        <Route
+          path="/anouc"
+          element={TeacherAuthStore.getState().teacherUser ? <AnnouncementPage /> : <Navigate to="/teacherlogin" replace />}
+        />
+        <Route
+          path="/doc"
+          element={TeacherAuthStore.getState().teacherUser ? <SharedDocumentsPage /> : <Navigate to="/teacherlogin" replace />}
         />
       </Routes>
     </>

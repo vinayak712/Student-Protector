@@ -8,7 +8,7 @@ import {
 import { studentAuthStore } from "../api/studentAuthStore";
 import { TeacherAuthStore } from "../api/teacherAuthStore";
 import { axiosInstance } from "../lib/axios";
-import NavDash from "../components/navDash";
+import NavDashT from "../Teacher/component/navDashT";
 import toast from "react-hot-toast";
 import { format, formatDistanceToNow } from "date-fns";
 
@@ -288,7 +288,7 @@ function AnnouncementPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-950 text-white">
-      <NavDash />
+      <NavDashT />
       
       <div className="ml-24 md:ml-64 p-6 pt-8">
         <div className="max-w-5xl mx-auto">
