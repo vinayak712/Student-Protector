@@ -17,6 +17,7 @@ import GradesPage from './pages/GradePage';
 import AnnouncementPage from './pages/AnnouncementPage';
 import Teacherdashboard from "./Teacher/component/dashboard";
 import Hero from './pages/Hero';
+
 function App() {
   return (
     <Router>
@@ -34,13 +35,9 @@ function AppRoutes() {
   useEffect(() => {
     fetchStudentInfo();
     fetchTeacherInfo();
-  }, [fetchStudentInfo, fetchTeacherInfo]);
+  }, []);
 
   const isAuthenticated = studentUser || teacherUser;
-
-  const ProtectedRoute = ({ isAuthenticated, redirectPath, children }) => {
-    return isAuthenticated ? children : <Navigate to={redirectPath} replace />;
-  };
 
   return (
     <>
@@ -49,74 +46,49 @@ function AppRoutes() {
 
       <Routes>
         <Route path="/" element={<MainPage />} />
-<Route path='/login' element={<Hero/>}></Route>
-        {/* Student routes */}
+        <Route path="/login" element={<Hero />} />
+
+        {/* Student Routes */}
         <Route
           path="/stulogin"
-          element={
-            studentUser ? <Navigate to="/dashboard" replace /> : <StudLogin />
-          }
+          element={studentUser ? <Navigate to="/dashboard" replace /> : <StudLogin />}
         />
         <Route
           path="/stusignup"
-          element={
-            studentUser ? <Navigate to="/dashboard" replace /> : <StudSignup />
-          }
+          element={studentUser ? <Navigate to="/dashboard" replace /> : <StudSignup />}
         />
         <Route
           path="/stuProfile"
-          element={
-            studentUser ? <Profile /> : <Navigate to="/stulogin" replace />
-          }
+          element={studentUser ? <Profile /> : <Navigate to="/stulogin" replace />}
         />
         <Route path="/stuabout" element={<About />} />
 
-        {/* Teacher routes */}
+        {/* Teacher Routes */}
         <Route
           path="/teachersignup"
-          element={
-            teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherSignup />
-          }
+          element={teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherSignup />}
         />
         <Route
           path="/teacherlogin"
-          element={
-            teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherLogin />
-          }
+          element={teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherLogin />}
         />
         <Route
           path="/teacherDash"
-          element={
-            <ProtectedRoute isAuthenticated={teacherUser} redirectPath="/teacherlogin">
-              <Teacherdashboard />
-            </ProtectedRoute>
-          }
+          element={teacherUser ? <Teacherdashboard /> : <Navigate to="/teacherlogin" replace />}
         />
 
-        {/* Protected routes */}
+        {/* Shared Authenticated Routes */}
         <Route
           path="/dashboard"
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated} redirectPath="/stulogin">
-              <Dashboard />
-            </ProtectedRoute>
-          }
+          element={isAuthenticated ? <Dashboard /> : <Navigate to="/stulogin" replace />}
         />
         <Route
           path="/announcements"
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated} redirectPath="/stulogin">
-              <AnnouncementPage />
-            </ProtectedRoute>
-          }
+          element={isAuthenticated ? <AnnouncementPage /> : <Navigate to="/stulogin" replace />}
         />
         <Route
           path="/grades"
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated} redirectPath="/stulogin">
-              <GradesPage />
-            </ProtectedRoute>
-          }
+          element={isAuthenticated ? <GradesPage /> : <Navigate to="/stulogin" replace />}
         />
       </Routes>
     </>

@@ -139,7 +139,7 @@ async function TeacherInfo(req,res) {
             profile_pic: teacher.profile_pic,
         });
     } catch (error) {
-        console.error("Studinfo controller error:", error.message);
+        console.error("Teacher controller error:", error.message);
         res.status(500).json({ message: "Server error: " + error.message });
     }
 }
