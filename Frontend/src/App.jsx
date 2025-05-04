@@ -17,6 +17,7 @@ import GradesPage from './pages/GradePage';
 import AnnouncementPage from './pages/AnnouncementPage';
 import Teacherdashboard from "./Teacher/component/dashboard";
 import Hero from './pages/Hero';
+import SharedDocumentsPage from './pages/SharedDocumentsPage';
 
 function App() {
   return (
@@ -89,6 +90,10 @@ function AppRoutes() {
         <Route
           path="/grades"
           element={isAuthenticated ? <GradesPage /> : <Navigate to="/stulogin" replace />}
+        />
+        <Route
+          path="/shareddoc"
+          element= {<SharedDocumentsPage/>}
         />
       </Routes>
     </>

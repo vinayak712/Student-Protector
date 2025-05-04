@@ -10,6 +10,7 @@ import announcementRouter from "./routes/announcement.route.js"; // Add this lin
 import ConnectDb from "./lib/DB.js";
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import sharedDocumentRouter from "./routes/sharedDocument.route.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -33,12 +34,15 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 const uploadsDir = path.join(__dirname, '../uploads');
 const announcementsDir = path.join(uploadsDir, 'announcements');
 fs.mkdirSync(announcementsDir, { recursive: true });
+const sharedDocumentsDir = path.join(uploadsDir, 'shared-documents');
+fs.mkdirSync(sharedDocumentsDir, { recursive: true });
 
 // API routes
 app.use("/api/auth", authRouter);
 app.use("/api/teacher", teacherRouter);
 app.use("/api/charts", chartRouter);
 app.use("/api/announcements", announcementRouter); // Add this line
+app.use("/api/shared-documents", sharedDocumentRouter);
 
 // Production setup
 if (process.env.NODE_ENV === "production") {
