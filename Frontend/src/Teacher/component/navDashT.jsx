@@ -106,7 +106,7 @@ function NavDashT() {
       {/* Settings & Logout */}
       <div className="flex flex-col gap-3">
         <Link
-          to="/Tproflie"
+          to="/Tprofile"
           className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
         >
           <Settings />

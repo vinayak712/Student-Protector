@@ -67,56 +67,66 @@ function AppRoutes() {
         {/* Student Auth Routes */}
         <Route
           path="/stulogin"
-          element={studentAuthStore.getState().studentUser ? <Navigate to="/dashboard" replace /> : <StudLogin />}
+          element={studentUser ? <Navigate to="/dashboard" replace /> : <StudLogin />}
         />
         <Route
           path="/stusignup"
-          element={studentAuthStore.getState().studentUser ? <Navigate to="/dashboard" replace /> : <StudSignup />}
+          element={studentUser ? <Navigate to="/dashboard" replace /> : <StudSignup />}
         />
         <Route
           path="/stuProfile"
-          element={studentAuthStore.getState().studentUser ? <Profile /> : <Navigate to="/stulogin" replace />}
+          element={studentUser ? <Profile /> : <Navigate to="/stulogin" replace />}
         />
         <Route path="/stuabout" element={<About />} />
 
         {/* Teacher Auth Routes */}
         <Route
           path="/teachersignup"
-          element={TeacherAuthStore.getState().teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherSignup />}
+          element={teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherSignup />}
         />
         <Route
           path="/teacherlogin"
-          element={TeacherAuthStore.getState().teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherLogin />}
+          element={teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherLogin />}
         />
         <Route
           path="/teacherDash"
-          element={TeacherAuthStore.getState().teacherUser ? <Teacherdashboard /> : <Navigate to="/teacherlogin" replace />}
+          element={teacherUser ? <Teacherdashboard /> : <Navigate to="/teacherlogin" replace />}
         />
 
         {/* Authenticated Routes */}
         <Route
           path="/dashboard"
-          element={studentAuthStore.getState().studentUser ? <Dashboard /> : <Navigate to="/stulogin" replace />}
+          element={studentUser ? <Dashboard /> : <Navigate to="/stulogin" replace />}
         />
         <Route
           path="/grades"
-          element={studentAuthStore.getState().studentUser ? <GradesPage /> : <Navigate to="/stulogin" replace />}
+          element={studentUser ? <GradesPage /> : <Navigate to="/stulogin" replace />}
         />
         <Route
           path="/Tprofile"
-          element={TeacherAuthStore.getState().teacherUser ? <TeacherProfile /> : <Navigate to="/teacherlogin" replace />}
+          element={teacherUser ? <TeacherProfile /> : <Navigate to="/teacherlogin" replace />}
         />
         <Route
           path="/courses"
-          element={studentAuthStore.getState().studentUser ? <StudentCourses /> : <Navigate to="/stulogin" replace />}
+          element={studentUser ? <StudentCourses /> : <Navigate to="/stulogin" replace />}
         />
+
+        {/* Shared Routes for Teacher and Student */}
         <Route
           path="/anouc"
-          element={TeacherAuthStore.getState().teacherUser ? <AnnouncementPage /> : <Navigate to="/teacherlogin" replace />}
+          element={
+            teacherUser || studentUser
+              ? <AnnouncementPage />
+              : <Navigate to="/login" replace />
+          }
         />
         <Route
           path="/doc"
-          element={TeacherAuthStore.getState().teacherUser ? <SharedDocumentsPage /> : <Navigate to="/teacherlogin" replace />}
+          element={
+            teacherUser || studentUser
+              ? <SharedDocumentsPage />
+              : <Navigate to="/login" replace />
+          }
         />
       </Routes>
     </>

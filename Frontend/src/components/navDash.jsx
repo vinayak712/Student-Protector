@@ -13,11 +13,14 @@ import {
   Menu,
   X,
 } from "lucide-react";
-
+import { studentAuthStore } from "../api/studentAuthStore";
 function NavDash() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
-
+  const { studentUser, Logout } = studentAuthStore();
+  function handle() {
+    Logout();
+  }
   return (
     <nav
       className={`h-screen ${
@@ -80,11 +83,11 @@ function NavDash() {
           </li>
           <li>
             <Link
-              to="/dashboard"
+              to="/doc"
               className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition transform hover:scale-105"
             >
               <Calendar className="text-white" />
-              {isOpen && <span className="text-white">Schedule</span>}
+              {isOpen && <span className="text-white">Announcement</span>}
             </Link>
           </li>
           <li>
@@ -109,7 +112,7 @@ function NavDash() {
           {isOpen && <span className="text-white">Settings</span>}
         </Link>
         <button
-          onClick={() => console.log("Logout")}
+          onClick={handle}
           className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition transform hover:scale-105 text-red-600"
         >
           <LogOut />
