@@ -1,5 +1,5 @@
 // src/pages/StudentCourses.jsx
-import React from 'react';
+// import React from 'react';
 import { BookOpen } from 'lucide-react';
 import NavDash from '../components/navDash';
 

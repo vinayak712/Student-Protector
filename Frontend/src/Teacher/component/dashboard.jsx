@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import  { useEffect } from 'react';
 import {
   Users,
   Bell,
@@ -8,7 +8,7 @@ import {
   Download,
   Trash2,
   Send,
-  ChevronDown
+
 } from 'lucide-react';
 import NavDashT from './navDashT';
 import { TeacherAuthStore } from '../../api/teacherAuthStore';
