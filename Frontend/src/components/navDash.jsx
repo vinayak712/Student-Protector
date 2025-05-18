@@ -17,7 +17,7 @@ import { studentAuthStore } from "../api/studentAuthStore";
 function NavDash() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
-  const { studentUser, Logout } = studentAuthStore();
+  const {  Logout } = studentAuthStore();
   function handle() {
     Logout();
   }

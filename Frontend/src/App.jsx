@@ -15,7 +15,7 @@ import TeacherSignup from './Teacher/pages/signup';
 import TeacherLogin from './Teacher/pages/Login';
 import NavBar from './components/navBar';
 import GradesPage from './pages/GradePage';
-import AnnouncementPage from './pages/AnnouncementPage';
+
 import Teacherdashboard from "./Teacher/component/dashboard";
 import Hero from './pages/Hero';
 import TeacherProfile from './Teacher/pages/TProfile';
@@ -112,14 +112,7 @@ function AppRoutes() {
         />
 
         {/* Shared Routes for Teacher and Student */}
-        <Route
-          path="/anouc"
-          element={
-            teacherUser || studentUser
-              ? <AnnouncementPage />
-              : <Navigate to="/login" replace />
-          }
-        />
+     
         <Route
           path="/doc"
           element={

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 // import logo from "../../src/assets/logo.png";
 import logo from "../../assets/logo.png";
 
@@ -8,9 +8,7 @@ import {
   Home,
   Settings,
   Calendar,
-  BarChart,
   User,
-  Book,
   LogOut,
   Menu,
     X,
@@ -75,7 +73,7 @@ function NavDashT() {
           </li>
           <li>
             <Link
-              to="/anouc"
+              to="/doc"
               className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
             >
               <User />
