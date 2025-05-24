@@ -1,32 +1,23 @@
 import { useEffect, useState } from "react";
 import { studentAuthStore } from "../api/studentAuthStore";
-import { TeacherAuthStore } from "../api/teacherAuthStore";
 import NavDash from "../components/navDash";
-import NavDashT from "../Teacher/component/navDashT";
 import { motion } from "framer-motion";
 import { Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Dashboard() {
   const { studentInfo, fetchStudentInfo } = studentAuthStore();
-  const { teacherInfo, teacherUser, fetchTeacherInfo } = TeacherAuthStore();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (teacherUser) {
-        await fetchTeacherInfo();
-      } else {
-        await fetchStudentInfo();
-      }
+      await fetchStudentInfo();
       setIsLoading(false);
     };
     fetchData();
-    // eslint-disable-next-line
-  }, [teacherUser, fetchStudentInfo, fetchTeacherInfo]);
+  }, [fetchStudentInfo]);
 
-  // Loading spinner
-  if (isLoading || (!studentInfo && !teacherUser)) {
+  if (isLoading || !studentInfo) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-950">
         <div className="flex flex-col items-center">
@@ -37,57 +28,6 @@ function Dashboard() {
     );
   }
 
-  // Teacher Dashboard
-  if (teacherUser && teacherInfo) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-950 text-white">
-        <NavDashT />
-        <div className="ml-0 md:ml-64 p-4 md:p-8">
-          <div className="max-w-4xl mx-auto space-y-10">
-            <motion.header
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
-            >
-              <div>
-                <h1 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">
-                  Welcome back,{" "}
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-                    {teacherInfo.name}
-                  </span>
-                </h1>
-                <p className="text-gray-400 mt-2 text-sm">Here’s your teaching overview.</p>
-              </div>
-              <div className="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 text-sm text-gray-300 shadow-sm">
-                <Calendar className="text-blue-400 w-5 h-5" />
-                <span>
-                  {new Date().toLocaleDateString("en-US", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
-              </div>
-            </motion.header>
-            {/* Add more teacher-specific dashboard content here */}
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-md"
-            >
-              <h2 className="text-xl font-semibold mb-4 text-white">Teacher Dashboard</h2>
-              <p className="text-gray-300">Welcome to your dashboard. Add your teacher-specific widgets here.</p>
-            </motion.section>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Student Dashboard
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-950 text-white">
       <NavDash />
@@ -144,7 +84,20 @@ function Dashboard() {
             <div className="pt-16 md:pt-8 px-6 pb-6 flex-1">
               <h3 className="text-2xl font-semibold">{studentInfo.name}</h3>
               <p className="text-gray-400 text-sm">{studentInfo.email}</p>
-              <p className="text-blue-400 text-sm mt-1">{studentInfo.usn}</p>
+               <p className="text-gray-400 text-sm">{studentInfo.usn}</p>
+              <p className="text-purple-400 text-sm mt-1">
+  Semester: {
+    (() => {
+      if (!studentInfo.usn) return "Unknown";
+      const year = studentInfo.usn.slice(3, 5); // <-- FIXED
+      if (year === "24") return 2;
+      if (year === "23") return 4;
+      if (year === "22") return 6;
+      return "Unknown";
+    })()
+  }
+</p>
+
               <div className="mt-6 pt-4 border-t border-slate-700">
                 <h4 className="text-sm font-medium text-gray-300 mb-2">Overall Progress</h4>
                 <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
