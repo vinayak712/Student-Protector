@@ -2,12 +2,18 @@ import { useEffect, useState } from "react";
 import { TeacherAuthStore } from "../../api/teacherAuthStore";
 import NavDashT from "./navDashT";
 import { motion } from "framer-motion";
-import { Calendar } from "lucide-react";
+import { Calendar, Search } from "lucide-react";
 import { Link } from "react-router-dom";
+import { axiosInstance } from "../../lib/axios";
 
 function Teacherdashboard() {
   const { teacherInfo, fetchTeacherInfo, teacherUser } = TeacherAuthStore();
   const [isLoading, setIsLoading] = useState(true);
+
+  // USN search state
+  const [usn, setUsn] = useState("");
+  const [studentResult, setStudentResult] = useState(null);
+  const [searchError, setSearchError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,6 +22,26 @@ function Teacherdashboard() {
     };
     fetchData();
   }, [fetchTeacherInfo]);
+
+  // Fetch student by USN
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    setStudentResult(null);
+    setSearchError("");
+    if (!usn.trim()) {
+      setSearchError("Please enter a USN.");
+      return;
+    }
+    try {
+      const res = await axiosInstance.get(`/auth/byusn/${usn}`);
+      setStudentResult(res.data);
+    } catch (error) {
+      setStudentResult(null);
+      setSearchError(
+        error.response?.data?.message || "Student not found or server error."
+      );
+    }
+  };
 
   if (isLoading || !teacherUser || !teacherInfo) {
     return (
@@ -33,6 +59,7 @@ function Teacherdashboard() {
       <NavDashT />
       <div className="ml-0 md:ml-64 p-4 md:p-8">
         <div className="max-w-4xl mx-auto space-y-10">
+          {/* Header */}
           <motion.header
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -60,7 +87,8 @@ function Teacherdashboard() {
               </span>
             </div>
           </motion.header>
-          {/* Teacher-specific dashboard content */}
+
+          {/* USN Search */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -68,14 +96,43 @@ function Teacherdashboard() {
             className="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-md"
           >
             <h2 className="text-2xl font-bold mb-6 text-white tracking-wide">Teacher Dashboard</h2>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-gray-300 text-lg mb-4"
-            >
-              Welcome to your dashboard.
-            </motion.p>
+            <div className="mb-8">
+              <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 items-center">
+                <input
+                  type="text"
+                  value={usn}
+                  onChange={(e) => setUsn(e.target.value)}
+                  placeholder="Enter Student USN"
+                  className="px-4 py-2 rounded-lg border border-slate-600 bg-slate-900 text-white focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition flex items-center gap-2"
+                >
+                  <Search className="w-4 h-4" />
+                  Search Student
+                </button>
+              </form>
+              {searchError && (
+                <div className="mt-2 text-red-400">{searchError}</div>
+              )}
+              {studentResult && (
+                <div className="mt-4 bg-slate-700 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold mb-2 text-blue-300">Student Details</h3>
+                  <div><span className="font-semibold">Name:</span> {studentResult.name}</div>
+                  <div><span className="font-semibold">Email:</span> {studentResult.email}</div>
+                  <div><span className="font-semibold">USN:</span> {studentResult.usn}</div>
+                  {studentResult.profile_pic && (
+                    <img
+                      src={studentResult.profile_pic}
+                      alt="Profile"
+                      className="mt-2 w-20 h-20 rounded-full object-cover border border-slate-500"
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+
             {/* Quick Actions */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -103,7 +160,6 @@ function Teacherdashboard() {
                 >
                   Document
                 </Link>
-               
               </div>
             </motion.div>
           </motion.section>

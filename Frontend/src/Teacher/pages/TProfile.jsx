@@ -1,4 +1,3 @@
-// src/components/TeacherProfile.jsx
 import React, { useEffect, useState } from "react";
 import { Camera, User, Mail, BookOpen, Save, Calendar } from "lucide-react";
 import { TeacherAuthStore } from "../../api/teacherAuthStore";
