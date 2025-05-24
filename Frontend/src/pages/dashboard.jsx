@@ -195,7 +195,7 @@ function Dashboard() {
             <h2 className="text-xl font-semibold mb-4 text-white">Latest Announcements</h2>
             <div className="space-y-4 text-sm text-gray-300">
               <Link
-                to="/anouc"
+                to="/doc"
                 className="flex items-center gap-2 border-l-4 border-blue-500 pl-4 py-2 hover:bg-slate-700/40 rounded transition"
               >
                 Click Here to View Announcements
