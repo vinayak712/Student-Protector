@@ -130,26 +130,14 @@ async function Logout(req, res) {
 }
 async function Studinfo(req, res) {
   try {
-    console.log("Student ID from token:", req.user._id); // Debugging
-    const studentId = req.user._id;
-
-    const student = await Student.findById(studentId).select(
-      "-password -__v -createdAt -updatedAt"
-    );
+    const studentId = req.user._id; // Ensure `req.user` is populated by middleware
+    const student = await Student.findById(studentId).select("-password -__v -createdAt -updatedAt");
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
-
-    // console.log("Student data fetched:", student); // Debugging
-    res.status(200).json({
-      _id: student._id,
-      name: student.name,
-      email: student.email,
-      usn: student.usn,
-      profile_pic: student.profile_pic,
-    });
+    res.status(200).json(student);
   } catch (error) {
-    console.error("Studinfo controller error:", error.message);
+    console.error("Error fetching student info:", error.message);
     res.status(500).json({ message: "Server error: " + error.message });
   }
 }

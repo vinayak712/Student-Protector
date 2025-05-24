@@ -15,7 +15,7 @@ const router = express.Router();
 router.post('/stulogin', Login);
 router.get('/byusn/:usn', getStudentByUSN);
 router.post('/stusignup', upload.single('profile_pic'), Signup);
-router.get('/studinfo', Studinfo);
+router.get('/studinfo',Protect, Studinfo);
 router.post('/stulogout', Logout);
 router.get('/check', Check);
 

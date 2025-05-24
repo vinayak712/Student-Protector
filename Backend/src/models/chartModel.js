@@ -104,6 +104,46 @@ const AttendanceSchema = new mongoose.Schema({
     required: true
   }
 });
+export const updateAttendance = async (req, res) => {
+  try {
+    const { usn, attendance } = req.body;
+
+    // Validate request body
+    if (!usn || !attendance) {
+      return res.status(400).json({ message: "USN and attendance are required." });
+    }
+
+    // Find student by USN
+    const student = await Student.findOne({ usn });
+    if (!student) {
+      return res.status(404).json({ message: "Student not found." });
+    }
+
+    // Update attendance
+    student.attendance = attendance;
+    await student.save();
+
+    res.status(200).json({ message: "Attendance updated successfully!" });
+  } catch (error) {
+    console.error("Error updating attendance:", error.message);
+    res.status(500).json({ message: "Server error while updating attendance." });
+  }
+};
+
+// Get attendance (Student)
+export const getStudentAttendance = async (req, res) => {
+  try {
+    const student = await Student.findById(req.user._id);
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    res.status(200).json({ attendance: student.attendance });
+  } catch (error) {
+    console.error("Error fetching attendance:", error);
+    res.status(500).json({ message: "Server error while fetching attendance." });
+  }
+};
 
 const File = mongoose.model('File', FileSchema);
 const Message = mongoose.model('Message', MessageSchema);

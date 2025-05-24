@@ -22,6 +22,8 @@ import TeacherProfile from './Teacher/pages/TProfile';
 import StudentCourses from './pages/courses';
 import SharedDocumentsPage from './pages/SharedDocumentsPage';
 
+import TeacherAttendanceMarks from './Teacher/pages/TeacherAttendenceMarks';
+
 function App() {
   return (
     <Router>
@@ -78,6 +80,9 @@ function AppRoutes() {
           element={studentUser ? <Profile /> : <Navigate to="/stulogin" replace />}
         />
         <Route path="/stuabout" element={<About />} />
+      
+      
+        <Route path="/teacherUpdate" element={<TeacherAttendanceMarks/>} />
 
         {/* Teacher Auth Routes */}
         <Route

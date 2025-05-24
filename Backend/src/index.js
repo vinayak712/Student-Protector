@@ -4,6 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import authRouter from "./routes/Student.auth.route.js";
+//import TeacherUpdateRouter from "./routes/TeacherUpdate.route.js"
 import teacherRouter from "./routes/Teacher.auth.route.js";
 import chartRouter from "./routes/chart.route.js";
 import announcementRouter from "./routes/announcement.route.js"; // Add this line
@@ -11,6 +12,8 @@ import ConnectDb from "./lib/DB.js";
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import sharedDocumentRouter from "./routes/sharedDocument.route.js";
+
+import AttendanceRouter from "./routes/Attendance.route.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -40,9 +43,13 @@ fs.mkdirSync(sharedDocumentsDir, { recursive: true });
 // API routes
 app.use("/api/auth", authRouter);
 app.use("/api/teacher", teacherRouter);
+// Register the route
+//app.use("/api/teacherUpdate", TeacherUpdateRouter);
 app.use("/api/charts", chartRouter);
 app.use("/api/announcements", announcementRouter); // Add this line
 app.use("/api/shared-documents", sharedDocumentRouter);
+
+app.use("/api/attendance", AttendanceRouter);
 
 // Production setup
 if (process.env.NODE_ENV === "production") {
