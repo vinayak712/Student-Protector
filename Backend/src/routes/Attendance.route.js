@@ -5,7 +5,7 @@ import Protect from "../middleware/auth.protect.js";
 const router = express.Router();
 
 // Route to update attendance (Teacher)
-router.post("/update", Protect, updateAttendance);
+router.post("/update", updateAttendance);
 
 // Route to get attendance (Student)
 router.get("/:usn", Protect, getStudentAttendance);

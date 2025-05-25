@@ -1,18 +1,26 @@
-import Student from "../models/studentmodel.js";
+import Student from "../models/Student.js";
 
 // Update attendance (Teacher)
 export const updateAttendance = async (req, res) => {
   try {
     const { usn, attendance } = req.body;
-    console.log(usn);
 
-    // Find student by USN
-    const student = await Student.findOne({ usn });
-    if (!student) {
-      return res.status(404).json({ message: "Student not found" });
+    // Validate request body
+    if (!usn || attendance === undefined) {
+      return res.status(400).json({ message: "USN and attendance are required." });
     }
 
-    // Update attendance
+    // Find student by USN
+    let student = await Student.findOne({ usn });
+
+    if (!student) {
+      // If student not found, create a new student record
+      student = new Student({ usn, attendance });
+      await student.save();
+      return res.status(201).json({ message: "New student created and attendance updated!" });
+    }
+
+    // Update attendance for existing student
     student.attendance = attendance;
     await student.save();
 
@@ -22,13 +30,11 @@ export const updateAttendance = async (req, res) => {
     res.status(500).json({ message: "Server error while updating attendance." });
   }
 };
-
-// Get attendance (Student)
+// Get  (Student)
 export const getStudentAttendance = async (req, res) => {
   try {
     const { usn } = req.params;
 
-    // Find student by USN
     const student = await Student.findOne({ usn }).select("attendance");
     if (!student) {
       return res.status(404).json({ message: "Student not found" });

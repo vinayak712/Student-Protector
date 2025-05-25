@@ -50,6 +50,7 @@ const handleSubmit = async (e) => {
     setSuccessMessage(res.data.message || "Attendance updated successfully!");
     setAttendance("");
   } catch (error) {
+    console.log(error)
     setSearchError(
       error.response?.data?.message || "Failed to submit data. Try again."
     );
