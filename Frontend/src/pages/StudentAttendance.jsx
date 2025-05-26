@@ -1,61 +1,43 @@
 import { useEffect, useState } from "react";
-import { axiosInstance } from "../../lib/axios";
-import { motion } from "framer-motion";
+import { useParams } from "react-router-dom"; // Import useParams to get route parameters
+import { axiosInstance } from "../lib/axios";
 
 function StudentAttendance() {
+  const { usn } = useParams(); // Get the USN from the route parameter
   const [attendance, setAttendance] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
-        const res = await axiosInstance.get(`/student/attendance`);
+        const res = await axiosInstance.get(`/attendance/${usn}`);
         setAttendance(res.data.attendance);
       } catch (error) {
-        setError(
-          error.response?.data?.message || "Failed to fetch attendance."
-        );
+        console.log(error);
+        setError(error.response?.data?.message || "Failed to fetch attendance.");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchAttendance();
-  }, []);
+  }, [usn]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-950 text-white p-6">
-      <div className="max-w-4xl mx-auto space-y-10">
-        <motion.header
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center"
-        >
-          <h1 className="text-3xl font-bold tracking-tight">
-            Your Attendance
-          </h1>
-          <p className="text-gray-400 mt-2">
-            View your current attendance percentage.
-          </p>
-        </motion.header>
-
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-md text-center"
-        >
-          {error ? (
-            <div className="text-red-400">{error}</div>
-          ) : attendance !== null ? (
-            <div>
-              <h2 className="text-2xl font-bold text-blue-300">
-                Attendance: {attendance}%
-              </h2>
-            </div>
-          ) : (
-            <div className="text-gray-400">Loading...</div>
-          )}
-        </motion.section>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-950 text-white p-6 flex items-center justify-center">
+      <div className="max-w-lg w-full bg-slate-800 rounded-xl shadow-lg p-6">
+        <h1 className="text-2xl font-bold text-center mb-6">Your Attendance</h1>
+        {loading ? (
+          <p className="text-center text-gray-400">Loading...</p>
+        ) : error ? (
+          <p className="text-center text-red-400">{error}</p>
+        ) : (
+          <div className="text-center">
+            <p className="text-lg font-semibold text-blue-300">USN: {usn}</p>
+            <p className="text-4xl font-bold text-green-400 mt-4">{attendance}%</p>
+          </div>
+        )}
       </div>
     </div>
   );

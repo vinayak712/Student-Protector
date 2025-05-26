@@ -91,13 +91,13 @@ function NavDash() {
             </Link>
           </li>
           <li>
-            <Link
+            {/* <Link
               to="/grades"
               className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition transform hover:scale-105"
             >
               <BarChart className="text-white" />
               {isOpen && <span className="text-white">Grades</span>}
-            </Link>
+            </Link> */}
           </li>
         </ul>
       </div>

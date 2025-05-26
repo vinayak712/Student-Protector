@@ -24,6 +24,10 @@ import SharedDocumentsPage from './pages/SharedDocumentsPage';
 
 import TeacherAttendanceMarks from './Teacher/pages/TeacherAttendenceMarks';
 
+import StudentAttendance from "./pages/StudentAttendance.jsx";
+import ErrorPage from './Teacher/pages/ErrorPage.jsx';
+
+
 function App() {
   return (
     <Router>
@@ -83,6 +87,8 @@ function AppRoutes() {
       
       
         <Route path="/teacherUpdate" element={<TeacherAttendanceMarks/>} />
+        <Route path="/attendance" element={<StudentAttendance />} />
+          <Route path="/attendance/:usn" element={<StudentAttendance />} />
 
         {/* Teacher Auth Routes */}
         <Route
@@ -126,6 +132,7 @@ function AppRoutes() {
               : <Navigate to="/login" replace />
           }
         />
+          <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>
   );

@@ -8,6 +8,6 @@ const router = express.Router();
 router.post("/update", updateAttendance);
 
 // Route to get attendance (Student)
-router.get("/:usn", Protect, getStudentAttendance);
+router.get("/:usn", getStudentAttendance);
 
 export default router;

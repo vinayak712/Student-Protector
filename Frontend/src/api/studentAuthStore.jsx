@@ -33,7 +33,8 @@ export const studentAuthStore = create((set) => ({
             set({ studentUser: res.data });
             toast.success("Signup Successfully 🎉");
         } catch (error) {
-            toast.error(error?.response?.data?.Message || "Something went wrong during signup.");
+            console.log(error)
+            // toast.error(error?.response?.data?.Message || "Something went wrong during signup.");
         } finally {
             set({ isSignup: false });
         }
@@ -46,6 +47,7 @@ export const studentAuthStore = create((set) => ({
             set({ studentUser: res.data });
             toast.success("Login Successfully 🎉");
         } catch (error) {
+            console.log(error)
             toast.error(error?.response?.data?.Message || "Something went wrong during login.");
         } finally {
             set({ isLogin: false });
@@ -58,7 +60,8 @@ export const studentAuthStore = create((set) => ({
             set({ studentUser: null, studentInfo: null });
             toast.success("Logout Successfully 🎉");
         } catch (error) {
-            toast.error(error?.response?.data?.Message || "Something went wrong during logout.");
+            console.log(error)
+            // toast.error(error?.response?.data?.Message || "Something went wrong during logout.");
         }
     },
 
@@ -70,7 +73,7 @@ export const studentAuthStore = create((set) => ({
             set({ studentInfo: res.data });
         } catch (error) {
             console.error("Error fetching student info:", error.response?.data || error.message);
-            toast.error("Failed to fetch student information.");
+            // toast.error("Failed to fetch student information.");
         }
     },
     

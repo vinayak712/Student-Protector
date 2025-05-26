@@ -48,6 +48,7 @@ export const TeacherAuthStore = create((set) => ({
             set({ teacherUser: res.data });
             toast.success("Login Successfully 🎉");
         } catch (error) {
+            console.log(error)
             toast.error(error?.response?.data?.Message || "Something went wrong during login.");
         } finally {
             set({ isLogin: false });
@@ -71,7 +72,6 @@ export const TeacherAuthStore = create((set) => ({
             set({ teacherInfo: res.data });
         } catch (error) {
             console.error("Error fetching Teacher  info:", error.response?.data || error.message);
-            toast.error("Failed to fetch Teacher information.");
         }
     }
 }));

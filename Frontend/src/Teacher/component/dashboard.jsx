@@ -143,6 +143,12 @@ function Teacherdashboard() {
               <h2 className="text-xl font-semibold mb-6 text-white">Quick Actions</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                 <Link
+                  to="/teacherUpdate"
+                  className="bg-blue-500/40 hover:bg-blue-600/60 text-white text-lg py-6 px-6 rounded-2xl flex flex-col items-center justify-center gap-3 shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+                >
+                  Manage Attendance
+                </Link>
+                <Link
                   to="/doc"
                   className="bg-blue-500/40 hover:bg-blue-600/60 text-white text-lg py-6 px-6 rounded-2xl flex flex-col items-center justify-center gap-3 shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
                 >
