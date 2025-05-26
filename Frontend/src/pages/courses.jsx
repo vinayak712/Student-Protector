@@ -1,34 +1,66 @@
-// src/pages/StudentCourses.jsx
-// import React from 'react';
+import React, { useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import NavDash from '../components/navDash';
 
-const courses = [
-  { code: "DAA", name: "Design & Analysis of Algorithms" },
-  { code: "MA201", name: "Advanced Mathematics" },
-  { code: "DBMS", name: "Database Management Systems" },
-  { code: "OS", name: "Operating Systems" },
-  { code: "ADS", name: "Advanced Data Structures" },
-  { code: "UHV", name: "Universal Human Values" },
-  { code: "EH", name: "Ethical Hacking" },
-  { code: "DV", name: "Data Visualization" },
-  { code: "MORE", name: "More Courses Coming Soon" },
-];
-
 export default function StudentCourses() {
+  const [courses, setCourses] = useState([
+    { code: "DAA", name: "Design & Analysis of Algorithms" },
+    { code: "MA201", name: "Advanced Mathematics" },
+    { code: "DBMS", name: "Database Management Systems" },
+    { code: "OS", name: "Operating Systems" },
+    { code: "ADS", name: "Advanced Data Structures" },
+    { code: "UHV", name: "Universal Human Values" },
+    { code: "EH", name: "Ethical Hacking" },
+    { code: "DV", name: "Data Visualization" },
+    { code: "MORE", name: "More Courses Coming Soon" },
+  ]);
+
+  const [newCourse, setNewCourse] = useState({ code: "", name: "" });
+
+  const handleAddCourse = (e) => {
+    e.preventDefault();
+    if (newCourse.code.trim() && newCourse.name.trim()) {
+      setCourses([...courses, newCourse]);
+      setNewCourse({ code: "", name: "" });
+    }
+  };
+
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-slate-900 to-slate-950 text-white overflow-x-hidden">
-      {/* Fixed sidebar */}
       <NavDash />
-
-      {/* Main content with left margin for sidebar */}
       <main className="ml-64 py-12 px-8">
         <h1 className="text-4xl font-extrabold mb-8">My Courses</h1>
+
+        {/* Form to add course */}
+        <form onSubmit={handleAddCourse} className="mb-10 flex flex-wrap gap-4 items-end">
+          <input
+            type="text"
+            placeholder="Course Code"
+            value={newCourse.code}
+            onChange={(e) => setNewCourse({ ...newCourse, code: e.target.value })}
+            className="bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none"
+          />
+          <input
+            type="text"
+            placeholder="Course Name"
+            value={newCourse.name}
+            onChange={(e) => setNewCourse({ ...newCourse, name: e.target.value })}
+            className="bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none"
+          />
+          <button
+            type="submit"
+            className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg font-medium text-white transition"
+          >
+            Add Course
+          </button>
+        </form>
+
+        {/* Courses grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
           {courses.map(({ code, name }) => (
             <div
               key={code}
-              className="bg-slate-800 bg-opacity-60 border border-slate-700 rounded-2xl p-6 flex flex-col justify-between shadow-lg transform hover:-translate-y-1 hover:shadow-xl transition"
+              className="bg-slate-800 bg-opacity-60 border border-slate-700 rounded-2xl p-6 flex flex-col justify-between shadow-lg"
             >
               <div>
                 <div className="flex items-center mb-4">
@@ -37,12 +69,6 @@ export default function StudentCourses() {
                 </div>
                 <p className="text-gray-300">{name}</p>
               </div>
-
-              {code !== "MORE" && (
-                <button className="mt-6 self-end px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg text-sm font-medium transition">
-                  View Details
-                </button>
-              )}
             </div>
           ))}
         </div>
