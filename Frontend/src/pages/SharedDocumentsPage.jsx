@@ -111,7 +111,7 @@ const handleDownload = async (docItem) => {
       console.error("Download error:", error);
       toast.error("Failed to download document");
     }
-  };
+  };  
 
   // Format file size
   const formatFileSize = (bytes) => {
