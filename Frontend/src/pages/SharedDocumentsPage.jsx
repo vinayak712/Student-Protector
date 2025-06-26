@@ -10,10 +10,12 @@ import {
   Search,
   Filter,
 } from "lucide-react";
-import NavDash from "../components/navDash";
+import NavDashT from "../Teacher/component/navDashT";
+import { studentAuthStore } from "../api/studentAuthStore"
+import { TeacherAuthStore } from "../api/teacherAuthStore";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
-
+import NavDash from "../components/navDash";
 function SharedDocumentsPage() {
   const [documents, setDocuments] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -24,7 +26,10 @@ function SharedDocumentsPage() {
   const fileInputRef = useRef(null);
   const [uploaderName, setUploaderName] = useState("");
   const [description, setDescription] = useState("");
-
+  const { studentUser } = studentAuthStore();
+  const { teacherUser } = TeacherAuthStore();
+  const currentUser = teacherUser || studentUser;
+  const userRole = teacherUser ? 'teacher' : 'student';
   // Fetch documents on component mount
   useEffect(() => {
     fetchDocuments();
@@ -174,7 +179,7 @@ const handleDownload = async (docItem) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-950 text-white">
-      <NavDash />
+     {userRole === 'teacher' ? <NavDashT /> : <NavDash />}
 
       <div className="ml-24 md:ml-64 p-6 pt-8">
         <div className="max-w-7xl mx-auto">

@@ -1,183 +1,177 @@
-import React from 'react';
-import {
-  Users, Bell, File, FileUp, Download, Trash2, Send, ChevronDown, Sun, Moon
-} from 'lucide-react';
-import NavDash from './navDashT';
+import { useEffect, useState } from "react";
+import { TeacherAuthStore } from "../../api/teacherAuthStore";
+import NavDashT from "./navDashT";
+import { motion } from "framer-motion";
+import { Calendar, Search } from "lucide-react";
+import { Link } from "react-router-dom";
+import { axiosInstance } from "../../lib/axios";
+
 function Teacherdashboard() {
-  const darkMode = false; // demo toggle
-  const toggleDarkMode = () => {}; // demo handler
+  const { teacherInfo, fetchTeacherInfo, teacherUser } = TeacherAuthStore();
+  const [isLoading, setIsLoading] = useState(true);
 
-  const stats = [
-    { label: "Courses", value: 5, color: "bg-blue-500", icon: Users },
-    { label: "Students", value: 120, color: "bg-green-500", icon: Users },
-    { label: "Assignments", value: 10, color: "bg-purple-500", icon: Users },
-    { label: "Messages", value: 42, color: "bg-yellow-500", icon: Users },
-  ];
+  // USN search state
+  const [usn, setUsn] = useState("");
+  const [studentResult, setStudentResult] = useState(null);
+  const [searchError, setSearchError] = useState("");
 
-  const notifications = [
-    { id: 1, read: false },
-    { id: 2, read: true }
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchTeacherInfo();
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [fetchTeacherInfo]);
 
-  const students = ["Alice", "Bob", "Charlie"];
-  const activeChat = "Alice";
-  const messages = [
-    { id: 1, content: "Hello, professor!", isTeacher: false, timestamp: new Date() },
-    { id: 2, content: "Hi Alice, how can I help you?", isTeacher: true, timestamp: new Date() }
-  ];
-  const newMessage = "";
+  // Fetch student by USN
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    setStudentResult(null);
+    setSearchError("");
+    if (!usn.trim()) {
+      setSearchError("Please enter a USN.");
+      return;
+    }
+    try {
+      const res = await axiosInstance.get(`/auth/byusn/${usn}`);
+      setStudentResult(res.data);
+    } catch (error) {
+      setStudentResult(null);
+      setSearchError(
+        error.response?.data?.message || "Student not found or server error."
+      );
+    }
+  };
 
-  const documents = [
-    { id: 1, name: "Syllabus.pdf", size: "1.2MB", uploadedAt: new Date() },
-    { id: 2, name: "Schedule.docx", size: "800KB", uploadedAt: new Date() }
-  ];
-
-  const activeTab = "chat";
+  if (isLoading || !teacherUser || !teacherInfo) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-950">
+        <div className="flex flex-col items-center">
+          <div className="w-16 h-16 border-4 border-t-blue-500 border-blue-500/30 rounded-full animate-spin"></div>
+          <p className="mt-4 text-gray-400">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-      <div className='min-h-screen w-screen bg-gradient-to-br from-slate-900 to-slate-950 text-white'>
-          <NavDash /> 
-          
-          <main className="ml-64 p-8">
-      {/* Header */}
-      <header className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Welcome back, Dr. Smith</h1>
-        <div className="flex items-center gap-4">
-          <button onClick={toggleDarkMode} className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
-            {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
-          </button>
-          <div className="relative">
-            <button className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
-              <Bell className="h-6 w-6" />
-              <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-                {notifications.filter(n => !n.read).length}
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-950 text-white">
+      <NavDashT />
+      <div className="ml-0 md:ml-64 p-4 md:p-8">
+        <div className="max-w-4xl mx-auto space-y-10">
+          {/* Header */}
+          <motion.header
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+          >
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">
+                Welcome back,{" "}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+                  {teacherInfo.name}
+                </span>
+              </h1>
+              <p className="text-gray-400 mt-2 text-sm">Here’s your teaching overview.</p>
+            </div>
+            <div className="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 text-sm text-gray-300 shadow-sm">
+              <Calendar className="text-blue-400 w-5 h-5" />
+              <span>
+                {new Date().toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </span>
-            </button>
-          </div>
-          <button className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-            <img
-              src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"
-              alt="Profile"
-              className="h-8 w-8 rounded-full object-cover"
-            />
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Dr. Smith</span>
-            <ChevronDown className="h-4 w-4 text-gray-500" />
-          </button>
-        </div>
-      </header>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat, index) => (
-          <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-4">
-              <div className={`${stat.color} p-3 rounded-lg`}>
-                <stat.icon className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
-              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          </motion.header>
 
-      {/* Chat and Documents Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-          <div className="flex border-b border-gray-200 dark:border-gray-700">
-            <button className="flex-1 px-6 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600">
-              Chat
-            </button>
-            <button className="flex-1 px-6 py-3 text-sm font-medium text-gray-500 dark:text-gray-400">
-              Documents
-            </button>
-          </div>
-
-          {/* Chat Area */}
-          <div className="flex h-[600px]">
-            <div className="w-1/3 border-r border-gray-200 dark:border-gray-700 p-4">
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Students</h3>
-              <div className="space-y-2">
-                {students.map(student => (
-                  <button key={student} className="w-full p-3 rounded-lg text-left text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                        <Users className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                      </div>
-                      <span>{student}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
+          {/* USN Search */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-md"
+          >
+            <h2 className="text-2xl font-bold mb-6 text-white tracking-wide">Teacher Dashboard</h2>
+            <div className="mb-8">
+              <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 items-center">
+                <input
+                  type="text"
+                  value={usn}
+                  onChange={(e) => setUsn(e.target.value)}
+                  placeholder="Enter Student USN"
+                  className="px-4 py-2 rounded-lg border border-slate-600 bg-slate-900 text-white focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition flex items-center gap-2"
+                >
+                  <Search className="w-4 h-4" />
+                  Search Student
+                </button>
+              </form>
+              {searchError && (
+                <div className="mt-2 text-red-400">{searchError}</div>
+              )}
+              {studentResult && (
+                <div className="mt-4 bg-slate-700 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold mb-2 text-blue-300">Student Details</h3>
+                  <div><span className="font-semibold">Name:</span> {studentResult.name}</div>
+                  <div><span className="font-semibold">Email:</span> {studentResult.email}</div>
+                  <div><span className="font-semibold">USN:</span> {studentResult.usn}</div>
+                  {studentResult.profile_pic && (
+                    <img
+                      src={studentResult.profile_pic}
+                      alt="Profile"
+                      className="mt-2 w-20 h-20 rounded-full object-cover border border-slate-500"
+                    />
+                  )}
+                </div>
+              )}
             </div>
 
-            <div className="flex-1 flex flex-col">
-              <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{activeChat}</h3>
+            {/* Quick Actions */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.4, type: "spring" }}
+              className="mt-10"
+            >
+              <h2 className="text-xl font-semibold mb-6 text-white">Quick Actions</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                <Link
+                  to="/teacherUpdate"
+                  className="bg-blue-500/40 hover:bg-blue-600/60 text-white text-lg py-6 px-6 rounded-2xl flex flex-col items-center justify-center gap-3 shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+                >
+                  Manage Attendance
+                </Link>
+                <Link
+                  to="/doc"
+                  className="bg-blue-500/40 hover:bg-blue-600/60 text-white text-lg py-6 px-6 rounded-2xl flex flex-col items-center justify-center gap-3 shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+                >
+                  Announcement
+                </Link>
+                <Link
+                  to="/Tprofile"
+                  className="bg-yellow-500/40 hover:bg-yellow-600/60 text-white text-lg py-6 px-6 rounded-2xl flex flex-col items-center justify-center gap-3 shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+                >
+                  Profile
+                </Link>
+                <Link
+                  to="/doc"
+                  className="bg-purple-500/40 hover:bg-purple-600/60 text-white text-lg py-6 px-6 rounded-2xl flex flex-col items-center justify-center gap-3 shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+                >
+                  Document
+                </Link>
               </div>
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.map(msg => (
-                  <div key={msg.id} className={`flex ${msg.isTeacher ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[70%] rounded-lg p-3 ${msg.isTeacher ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white'}`}>
-                      <p>{msg.content}</p>
-                      <p className="text-xs mt-1 opacity-70">a moment ago</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Type your message..."
-                    className="flex-1 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2 text-gray-800 dark:text-white"
-                  />
-                  <button className="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700">
-                    <Send className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Documents Panel */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Documents</h3>
-            <label className="cursor-pointer bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700">
-              <input type="file" className="hidden" />
-              <FileUp className="h-5 w-5 inline-block mr-2" />
-              Upload Document
-            </label>
-          </div>
-          <div className="space-y-4">
-            {documents.map((doc) => (
-              <div key={doc.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <File className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                  <div>
-                    <p className="font-medium text-gray-800 dark:text-white">{doc.name}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">1 hour ago</p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg">
-                    <Download className="h-5 w-5" />
-                  </button>
-                  <button className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/50 rounded-lg">
-                    <Trash2 className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+            </motion.div>
+          </motion.section>
         </div>
       </div>
-    </main>
-   </div>
+    </div>
   );
 }
 

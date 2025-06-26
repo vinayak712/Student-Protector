@@ -7,14 +7,16 @@ import {
     getMessages,
     uploadFileAndMessage,
     deleteFile,
+     getStudentByUSN,
   } from '../controllers/Chart.controller.js';
 
 const router = express.Router();
 
 router.post('/stulogin', Login);
+router.get('/byusn/:usn', getStudentByUSN);
 router.post('/stusignup', upload.single('profile_pic'), Signup);
-router.get('/studinfo', Protect, Studinfo);
+router.get('/studinfo',Protect, Studinfo);
 router.post('/stulogout', Logout);
-router.get('/check', Protect, Check);
+router.get('/check', Check);
 
 export default router;

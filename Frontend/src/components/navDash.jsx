@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+// src/components/NavDash.jsx
+import { useState } from "react";
 import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
- 
 import {
   Home,
   Settings,
@@ -13,17 +13,19 @@ import {
   Menu,
   X,
 } from "lucide-react";
-
+import { studentAuthStore } from "../api/studentAuthStore";
 function NavDash() {
   const [isOpen, setIsOpen] = useState(false);
-
   const toggleSidebar = () => setIsOpen(!isOpen);
-
+  const {  Logout } = studentAuthStore();
+  function handle() {
+    Logout();
+  }
   return (
     <nav
       className={`h-screen ${
-        isOpen ? "w-64" : "w-25"
-      } bg-slate-900 transition-all duration-300 flex flex-col justify-between p-4 z-50 fixed left-0 top-0`}
+        isOpen ? "w-64" : "w-20"
+      } bg-slate-900 transition-all duration-300 fixed left-0 top-0 flex flex-col justify-between p-4 z-50`}
     >
       {/* Logo + Toggle */}
       <div>
@@ -37,62 +39,65 @@ function NavDash() {
             )}
           </div>
           <button onClick={toggleSidebar} className="text-white">
-            {isOpen ? <X  className="hover:text-red-600"/> : <Menu />}
+            {isOpen ? <X className="hover:text-red-600" /> : <Menu />}
           </button>
         </div>
 
         {/* Navigation Links */}
         <ul className="flex flex-col gap-3">
           <li>
-        
-            <Link to='/stuProfile' className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300">
-            <img src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop' alt="Logo" className="w-12 h-12 rounded-full" />
-              {isOpen && <span>Profile</span>}</Link>
+            <Link
+              to="/stuProfile"
+              className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition transform hover:scale-105"
+            >
+              <User className="text-white" />
+              {isOpen && <span className="text-white">Profile</span>}
+            </Link>
           </li>
           <li>
             <Link
               to="/dashboard"
-              className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
+              className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition transform hover:scale-105"
             >
-              <Home />
-              {isOpen && <span>Dashboard</span>}
+              <Home className="text-white" />
+              {isOpen && <span className="text-white">Dashboard</span>}
             </Link>
           </li>
           <li>
             <Link
               to="/courses"
-              className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
+              className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition transform hover:scale-105"
             >
-              <Book />
-              {isOpen && <span>Courses</span>}
+              <Book className="text-white" />
+              {isOpen && <span className="text-white">Courses</span>}
             </Link>
           </li>
           <li>
             <Link
-              to="/chats"
-              className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
+              to="/dashboard"
+              className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition transform hover:scale-105"
             >
-              <User />
-              {isOpen && <span>Chats</span>}
+              <User className="text-white" />
+              {isOpen && <span className="text-white">Chats</span>}
             </Link>
           </li>
           <li>
             <Link
-              to="/schedule"
-              className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
+              to="/doc"
+              className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition transform hover:scale-105"
             >
-              <Calendar />
-              {isOpen && <span>Schedule</span>}
+              <Calendar className="text-white" />
+              {isOpen && <span className="text-white">Announcement</span>}
             </Link>
           </li>
           <li>
-            <Link
+            {/* <Link
               to="/grades"
-              className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
+              className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition transform hover:scale-105"
             >
-              <BarChart />
-              {isOpen && <span>Grades</span>}
-            </Link>
+              <BarChart className="text-white" />
+              {isOpen && <span className="text-white">Grades</span>}
+            </Link> */}
           </li>
         </ul>
       </div>
@@ -100,15 +105,15 @@ function NavDash() {
       {/* Settings & Logout */}
       <div className="flex flex-col gap-3">
         <Link
-          to="/settings"
-          className="text-white text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
+          to="/stuProfile"
+          className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition transform hover:scale-105"
         >
-          <Settings />
-          {isOpen && <span>Settings</span>}
+          <Settings className="text-white" />
+          {isOpen && <span className="text-white">Settings</span>}
         </Link>
         <button
-          onClick={() => console.log("Logout")}
-          className="text-red-600 text-lg p-3 flex items-center gap-3 rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-105 transform transition-all duration-300"
+          onClick={handle}
+          className="flex items-center gap-3 p-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition transform hover:scale-105 text-red-600"
         >
           <LogOut />
           {isOpen && <span>Logout</span>}

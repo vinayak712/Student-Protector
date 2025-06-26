@@ -90,7 +90,7 @@ function MainPage() {
                 <ArrowRight size={18} />
               </motion.button>
             </Link>
-            <Link to="/about" className="w-full md:w-auto">
+            <Link to="/stuabout" className="w-full md:w-auto">
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}

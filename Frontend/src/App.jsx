@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
+
 import { studentAuthStore } from "./api/studentAuthStore";
 import { TeacherAuthStore } from "./api/teacherAuthStore";
 
@@ -14,10 +15,18 @@ import TeacherSignup from './Teacher/pages/signup';
 import TeacherLogin from './Teacher/pages/Login';
 import NavBar from './components/navBar';
 import GradesPage from './pages/GradePage';
-import AnnouncementPage from './pages/AnnouncementPage';
+
 import Teacherdashboard from "./Teacher/component/dashboard";
 import Hero from './pages/Hero';
+import TeacherProfile from './Teacher/pages/TProfile';
+import StudentCourses from './pages/courses';
 import SharedDocumentsPage from './pages/SharedDocumentsPage';
+
+import TeacherAttendanceMarks from './Teacher/pages/TeacherAttendenceMarks';
+
+import StudentAttendance from "./pages/StudentAttendance.jsx";
+import ErrorPage from './Teacher/pages/ErrorPage.jsx';
+
 
 function App() {
   return (
@@ -38,18 +47,30 @@ function AppRoutes() {
     fetchTeacherInfo();
   }, []);
 
-  const isAuthenticated = studentUser || teacherUser;
+  const isSidebarRoute = (path) => {
+    const sidebarRoutes = [
+      "/dashboard",
+      "/courses",
+      "/grades",
+      "/Tprofile",
+      "/anouc",
+      "/doc",
+      "/teacherDash"
+    ];
+    return sidebarRoutes.some(route => path.startsWith(path));
+  };
 
   return (
     <>
-      {/* Show NavBar only on non-dashboard routes */}
-      {!location.pathname.startsWith("/dashboard") && !location.pathname.startsWith("/teacherDash") && <NavBar />}
+      {/* Conditionally render NavBar */}
+      {!isSidebarRoute(location.pathname) && <NavBar />}
 
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<Hero />} />
 
-        {/* Student Routes */}
+        {/* Student Auth Routes */}
         <Route
           path="/stulogin"
           element={studentUser ? <Navigate to="/dashboard" replace /> : <StudLogin />}
@@ -63,8 +84,13 @@ function AppRoutes() {
           element={studentUser ? <Profile /> : <Navigate to="/stulogin" replace />}
         />
         <Route path="/stuabout" element={<About />} />
+      
+      
+        <Route path="/teacherUpdate" element={<TeacherAttendanceMarks/>} />
+        <Route path="/attendance" element={<StudentAttendance />} />
+          <Route path="/attendance/:usn" element={<StudentAttendance />} />
 
-        {/* Teacher Routes */}
+        {/* Teacher Auth Routes */}
         <Route
           path="/teachersignup"
           element={teacherUser ? <Navigate to="/teacherDash" replace /> : <TeacherSignup />}
@@ -78,23 +104,35 @@ function AppRoutes() {
           element={teacherUser ? <Teacherdashboard /> : <Navigate to="/teacherlogin" replace />}
         />
 
-        {/* Shared Authenticated Routes */}
+        {/* Authenticated Routes */}
         <Route
           path="/dashboard"
-          element={isAuthenticated ? <Dashboard /> : <Navigate to="/stulogin" replace />}
-        />
-        <Route
-          path="/announcements"
-          element={isAuthenticated ? <AnnouncementPage /> : <Navigate to="/stulogin" replace />}
+          element={studentUser ? <Dashboard /> : <Navigate to="/stulogin" replace />}
         />
         <Route
           path="/grades"
-          element={isAuthenticated ? <GradesPage /> : <Navigate to="/stulogin" replace />}
+          element={studentUser ? <GradesPage /> : <Navigate to="/stulogin" replace />}
         />
         <Route
-          path="/shareddoc"
-          element= {<SharedDocumentsPage/>}
+          path="/Tprofile"
+          element={teacherUser ? <TeacherProfile /> : <Navigate to="/teacherlogin" replace />}
         />
+        <Route
+          path="/courses"
+          element={studentUser ? <StudentCourses /> : <Navigate to="/stulogin" replace />}
+        />
+
+        {/* Shared Routes for Teacher and Student */}
+     
+        <Route
+          path="/doc"
+          element={
+            teacherUser || studentUser
+              ? <SharedDocumentsPage />
+              : <Navigate to="/login" replace />
+          }
+        />
+          <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>
   );
